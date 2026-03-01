@@ -41,10 +41,10 @@
       z-index:-1;
     }
     @media (orientation:portrait){
-      body::before{ background-image:url("Estimania_bg_staand.png"); }
+      body::before{ background-image:url("assets/Estimania_bg_staand.png"); }
     }
     @media (orientation:landscape){
-      body::before{ background-image:url("Estimania_bg_liggend.png"); }
+      body::before{ background-image:url("assets/Estimania_bg_liggend.png"); }
     }
 
     /* Intro overlay (2s, optional asset) */
@@ -157,6 +157,75 @@
       margin-bottom:10px;
       font-weight:800;
     }
+
+
+    /* Game card (uses background images, fits screen) */
+    .gameCard{
+      position:relative;
+      margin: 2px auto 0;
+      width: 100%;
+      max-width: 520px;
+      height: min(62vh, 560px); /* fit on mobile */
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size: contain;
+      display:flex;
+      flex-direction:column;
+      align-items:stretch;
+      justify-content:flex-start;
+      padding: 56px 44px 46px; /* tuned for card art; adjust if needed */
+      filter: drop-shadow(0 14px 34px rgba(36,78,143,.18));
+    }
+    @media (orientation:portrait){
+      .gameCard{
+        background-image:url("assets/card_bg_staand.png");
+        aspect-ratio: 2 / 3;
+      }
+    }
+    @media (orientation:landscape){
+      .gameCard{
+        background-image:url("assets/card_bg_liggend.png");
+        aspect-ratio: 3 / 2;
+        height: min(60vh, 420px);
+        padding: 44px 52px 40px;
+      }
+    }
+
+    .ribbon{
+      width:min(78%, 380px);
+      height:auto;
+      margin: 0 auto 10px;
+      display:block;
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .cardMeta{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-start;
+      margin-bottom:10px;
+    }
+    .pillMeta{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(36,78,143,.22);
+      background: rgba(247,251,255,.75);
+      color: var(--primary);
+      font-weight:900;
+      font-size:12px;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .qText{ font-size:20px; font-weight:850; }
+    .aText{ font-size:22px; font-weight:950; }
+
 
     /* Timer */
     .timerRow{
@@ -359,8 +428,11 @@
 
   <div id="intro" aria-hidden="true">
     <div class="media">
+      
+      <div id="introText" style="display:none;font-weight:950;font-size:44px;color:#244E8F;letter-spacing:.06em;">ESTIMANIA</div>
       <img src="assets/intro.jpg" alt="Estimania intro"
-           onerror="this.style.display='none'; this.parentElement.textContent='(Plaats straks assets/intro.jpg of assets/intro.mp4)';" />
+           onerror="this.style.display='none'; this.parentElement.textContent='(Plaats straks assets/assets/intro.jpg of assets/intro.mp4)';" />
+
     </div>
   </div>
 
@@ -374,20 +446,28 @@
     </div>
 
     
+    
     <div class="mainStack">
-      <div class="card scrollCard">
+
+      <div class="gameCard" role="group" aria-label="Speelkaart">
+        <img class="ribbon" src="assets/ribbon.png" alt="Estimania" />
+
+        <div class="cardMeta">
+          <div class="pillMeta" id="categoryPill">Categorie: —</div>
+        </div>
+
         <div class="label">Vraag</div>
         <div id="question" class="qText"></div>
+
+        <div style="height:14px;"></div>
+
+        <div class="label">Antwoord</div>
+        <div id="answerValue" class="aText"></div>
       </div>
 
       <div class="timerRow">
         <div id="countdown"></div>
         <div class="bar" aria-label="Tijdsbalk"><div id="barFill"></div></div>
-      </div>
-
-      <div class="card scrollCard">
-        <div class="label">Antwoord</div>
-        <div id="answerValue" class="aText"></div>
       </div>
 
       <div class="stickyActions">
@@ -397,6 +477,7 @@
 
       <div class="footerStatus" id="status"></div>
     </div>
+
 </div>
         </div>
 
@@ -428,7 +509,7 @@
       <div class="setting">
         <div class="left">
           <div class="name">Achtergrondmuziek</div>
-          <div class="desc">Speelt background.mp3 (loop). Standaard uit, volume 20%.</div>
+          <div class="desc">Speelt assets/background.mp3 (loop). Standaard uit, volume 20%.</div>
         </div>
         <div class="toggle" id="toggle-bgm" role="switch" aria-checked="false"></div>
       </div>
@@ -451,12 +532,13 @@
       <div class="setting">
         <div class="left">
           <div class="name">Duur antwoordtijd</div>
-          <div class="desc">Kies 15s, 30s of 45s (tune: 15s.mp3 / 30s.mp3 / 45s.mp3).</div>
+          <div class="desc">Kies 15s, 30s of 45s (tune: assets/15s.mp3 / assets/30s.mp3 / assets/45s.mp3).</div>
         </div>
         <select id="sel-duration" aria-label="Duur">
           <option value="15">15s</option>
           <option value="30">30s</option>
           <option value="45">45s</option>
+          <option value="inf">∞</option>
         </select>
       </div>
 
@@ -501,10 +583,11 @@
     </div>
   </div>
 
-  <audio id="bgm" src="background.mp3" loop preload="auto"></audio>
-  <audio id="tune15" src="15s.mp3" preload="auto"></audio>
-  <audio id="tune30" src="30s.mp3" preload="auto"></audio>
-  <audio id="tune45" src="45s.mp3" preload="auto"></audio>
+  <audio id="introAudio" src="assets/intro.mp3" preload="auto"></audio>
+  <audio id="bgm" src="assets/background.mp3" loop preload="auto"></audio>
+  <audio id="tune15" src="assets/15s.mp3" preload="auto"></audio>
+  <audio id="tune30" src="assets/30s.mp3" preload="auto"></audio>
+  <audio id="tune45" src="assets/45s.mp3" preload="auto"></audio>
 
   <script>
     const DB_FILES = ["VragenDatabase.json", "ActueleVragen.json"];
@@ -519,6 +602,8 @@
     };
 
     const introEl = document.getElementById("intro");
+    const introAudio = document.getElementById("introAudio");
+    const introText = document.getElementById("introText");
     const pageMain = document.getElementById("page-main");
     const pageSettings = document.getElementById("page-settings");
 
@@ -526,6 +611,7 @@
     const backBtn = document.getElementById("back");
 
     const questionEl = document.getElementById("question");
+    const categoryPill = document.getElementById("categoryPill");
     const countdownEl = document.getElementById("countdown");
     const barFill = document.getElementById("barFill");
 const answerValueEl = document.getElementById("answerValue");
@@ -588,7 +674,7 @@ const answerValueEl = document.getElementById("answerValue");
     function saveSettings(){
       localStorage.setItem(KEY.bgm, settings.bgm ? "1" : "0");
       localStorage.setItem(KEY.tts, settings.tts ? "1" : "0");
-      localStorage.setItem(KEY.duration, String(settings.duration));
+      localStorage.setItem(KEY.duration, settings.duration === "inf" ? "inf" : String(settings.duration));
       localStorage.setItem(KEY.difficulty, String(settings.difficulty));
       localStorage.setItem(KEY.categories, settings.categories ? JSON.stringify([...settings.categories]) : "");
       localStorage.setItem(KEY.sfx, settings.sfx ? "1" : "0");
@@ -606,7 +692,7 @@ const answerValueEl = document.getElementById("answerValue");
 
       settings.bgm = bgmV === "1";
       settings.tts = (ttsV === null) ? true : (ttsV === "1");
-      settings.duration = durV ? parseInt(durV, 10) : 30;
+      settings.duration = durV ? (durV === "inf" ? "inf" : parseInt(durV, 10)) : 30;
       settings.difficulty = difV || "medium";
 
       settings.sfx = (sfxV === null) ? true : (sfxV === "1");
@@ -623,7 +709,7 @@ const answerValueEl = document.getElementById("answerValue");
       setToggle(toggleBgm, settings.bgm);
       setToggle(toggleTts, settings.tts);
       setToggle(toggleSfx, settings.sfx);
-      selDuration.value = String(settings.duration);
+      selDuration.value = (settings.duration === "inf") ? "inf" : String(settings.duration);
       selDifficulty.value = String(settings.difficulty);
 
       bgm.volume = 0.2;
@@ -693,6 +779,7 @@ const answerValueEl = document.getElementById("answerValue");
         u.lang = "nl-NL";
         u.rate = 1.0;
         u.pitch = 1.0;
+        u.volume = 1.0;
 
         const v = pickDutchNLVoice();
         if (v) u.voice = v;
@@ -721,7 +808,7 @@ const answerValueEl = document.getElementById("answerValue");
       try { await safePlay(tune45); tune45.pause(); tune45.currentTime = 0; } catch {}
     }
 
-    function fallbackBeep(){
+    function tone(freq=880, ms=120, vol=0.09){
       try {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return;
@@ -729,20 +816,23 @@ const answerValueEl = document.getElementById("answerValue");
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = "sine";
-        osc.frequency.value = 880;
-        gain.gain.value = 0.09;
+        osc.frequency.value = freq;
+        gain.gain.value = vol;
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
         setTimeout(() => {
           osc.stop();
           ctx.close && ctx.close();
-        }, 150);
+        }, ms);
       } catch {}
     }
-    function playEndBeep(){ if (settings.sfx) fallbackBeep(); }
+    function tickBeep(){ if (settings.sfx) tone(880, 80, 0.08); }
+    function endBuzz(){ if (settings.sfx) tone(220, 260, 0.10); }
+    function playEndBeep(){ tickBeep(); }
 
     function getTuneForDuration(){
+      if (settings.duration === "inf") return null;
       if (settings.duration === 15) return tune15;
       if (settings.duration === 45) return tune45;
       return tune30;
@@ -750,6 +840,7 @@ const answerValueEl = document.getElementById("answerValue");
     async function playTune(){
       if (!settings.sfx) return;
       const a = getTuneForDuration();
+      if (!a) return;
       try { a.currentTime = 0; await safePlay(a); } catch {}
     }
     function stopTune(){
@@ -909,6 +1000,7 @@ const answerValueEl = document.getElementById("answerValue");
       stopTimer();
       stopTune();
       questionEl.textContent = "";
+      if (categoryPill) { categoryPill.textContent = "Categorie: —"; categoryPill.title=""; }
       countdownEl.textContent = "";
       barFill.style.width = "0%";      answerValueEl.textContent = "";
       revealBtn.disabled = true;
@@ -938,13 +1030,23 @@ const answerValueEl = document.getElementById("answerValue");
       if (!current) return;
 
       tTotal = settings.duration;
-      tLeft = tTotal;
+      if (tTotal === "inf") {
+        tLeft = null;
+      } else {
+        tLeft = tTotal;
+      }
 
       questionEl.textContent = getQuestionText(current);
+
+      if (categoryPill) {
+        const c = getCategory(current);
+        categoryPill.textContent = `Categorie: ${c}`;
+        categoryPill.title = c;
+      }
       countdownEl.style.color = "var(--primary)";
       countdownEl.classList.remove("shake");
-      countdownEl.textContent = String(tLeft);
-      setProgress(tLeft, tTotal);      answerValueEl.textContent = "";
+      countdownEl.textContent = (tLeft === null) ? "∞" : String(tLeft);
+      setProgress((tLeft === null) ? 1 : tLeft, (tTotal === "inf") ? 1 : tTotal);      answerValueEl.textContent = "";
       revealBtn.disabled = false;
 
       speak(getQuestionText(current));
@@ -953,19 +1055,26 @@ const answerValueEl = document.getElementById("answerValue");
 
       await updateBgmPlayback();
 
+      if (tLeft === null) {
+        // Oneindig: geen timer, geen tune (behalve als je zelf een ambient wilt)
+        countdownEl.style.color = "var(--primary)";
+        barFill.style.width = "100%";
+        return;
+      }
+
       timer = setInterval(() => {
         tLeft -= 1;
         if (tLeft > 0) {
           countdownEl.style.color = "var(--primary)";
       countdownEl.classList.remove("shake");
-      countdownEl.textContent = String(tLeft);
-          setProgress(tLeft, tTotal);
+      countdownEl.textContent = (tLeft === null) ? "∞" : String(tLeft);
+          setProgress((tLeft === null) ? 1 : tLeft, (tTotal === "inf") ? 1 : tTotal);
         } else {
           stopTimer();
           stopTune();
           countdownEl.textContent = "0";
           setProgress(0, tTotal);
-          playEndBeep();
+          endBuzz();
           revealAnswer(false);
         }
       }, 1000);
@@ -1027,7 +1136,7 @@ const answerValueEl = document.getElementById("answerValue");
     });
 
     selDuration.addEventListener("change", () => {
-      settings.duration = parseInt(selDuration.value, 10);
+      settings.duration = (selDuration.value === "inf") ? "inf" : parseInt(selDuration.value, 10);
       saveSettings();
       stopTimer();
       stopTune();
@@ -1051,10 +1160,22 @@ const answerValueEl = document.getElementById("answerValue");
     catNone.addEventListener("click", () => deselectAllCategories());
 
     async function boot(){
+      // Intro audio (best effort). Autoplay may be blocked on mobile; if so, show text fallback.
+      try {
+        const p = introAudio && introAudio.play ? introAudio.play() : null;
+        if (p && typeof p.catch === "function") {
+          p.catch(() => {
+            if (introText) introText.style.display = "block";
+          });
+        }
+      } catch {
+        if (introText) introText.style.display = "block";
+      }
+
       setTimeout(() => {
         introEl.style.display = "none";
         introEl.setAttribute("aria-hidden","true");
-      }, 2000);
+      }, 3000);
 
       loadSettings();
       updateSettingsUI();
