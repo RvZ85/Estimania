@@ -1,1194 +1,243 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estimania</title>
-  <style>
-    :root{
-      --primary:#244E8F;
-      --bg:#F7FBFF;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#5b6b84;
-      --warn:#F5A623;
-      --danger:#D64545;
-      --radius:16px;
-      --shadow:0 10px 28px rgba(36,78,143,.12);
-      --border:rgba(36,78,143,.18);
-    }
-    *{box-sizing:border-box;}
-    html,body{height:100%;}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing: antialiased;
-      overflow-x:hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estimania</title>
 
-    /* Background pattern overlay */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background-repeat:no-repeat;
-      background-position:center;
-      background-size:cover;
-      opacity:.22;
-      pointer-events:none;
-      z-index:-1;
-    }
-    @media (orientation:portrait){
-      body::before{ background-image:url("assets/Estimania_bg_staand.png"); }
-    }
-    @media (orientation:landscape){
-      body::before{ background-image:url("assets/Estimania_bg_liggend.png"); }
-    }
+<style>
+:root{
+  --primary:#244E8F;
+  --bg:#F7FBFF;
+  --warn:#F5A623;
+  --danger:#D64545;
+}
 
-    /* Intro overlay (2s, optional asset) */
-    #intro{
-      position:fixed; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(247,251,255,.98);
-      z-index:9999;
-    }
-    #intro .media{
-      width:min(92vw, 480px);
-      aspect-ratio: 9/16;
-      border-radius:24px;
-      overflow:hidden;
-      background:#ffffff;
-      box-shadow: 0 18px 60px rgba(36,78,143,.18);
-      display:flex; align-items:center; justify-content:center;
-      color:var(--muted);
-      text-align:center;
-      padding:18px;
-    }
-    #intro img, #intro video{width:100%; height:100%; object-fit:cover; display:block;}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#0f172a;}
 
-    /* Pages (mobile-first 9:16 feel) */
-    .page{
-      display:none;
-      max-width:520px;
-      margin:0 auto;
-      min-height:100vh;
-      padding:14px 14px 18px;
-      gap:12px;
-      flex-direction:column;
-    }
-    .page.active{display:flex;}
+.page{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:16px;gap:14px;}
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding-top:6px;
-    }
-    .brand .title{
-      font-weight:900;
-      letter-spacing:.2px;
-      font-size:18px;
-      line-height:1.1;
-      color:var(--primary);
-    }
-    .brand .subtle{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.2;
-    }
+.topbar{display:flex;justify-content:space-between;align-items:center;}
 
-    .iconbtn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.78);
-      color: var(--primary);
-      width:44px; height:44px;
-      border-radius:14px;
-      box-shadow: var(--shadow);
-      font-size:20px;
-      cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .iconbtn:active{transform: translateY(1px);}
+button{border-radius:14px;padding:14px;font-weight:900;cursor:pointer;}
+.primary{background:var(--primary);color:#fff;border:none;}
+.outline{background:transparent;color:var(--primary);border:2px solid var(--primary);}
 
-    .card{
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(36,78,143,.14);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding:18px;
-    }
+.sticky{margin-top:auto;display:flex;gap:10px;position:sticky;bottom:10px;}
 
-    /* Main layout */
-    .mainStack{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      flex:1;
-      min-height:0;
-    }
-    .scrollCard{
-      padding:18px;
-      min-height:140px;
-      max-height:210px;
-      overflow:auto;
-    }
-    .qText{
-      font-size:20px;
-      font-weight:800;
-      line-height:1.25;
-      white-space:pre-wrap;
-      color:var(--text);
-    }
-    .aText{
-      font-size:22px;
-      font-weight:900;
-      line-height:1.2;
-      white-space:pre-wrap;
-      color:var(--text);
-    }
-    .label{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.10em;
-      color:var(--muted);
-      margin-bottom:10px;
-      font-weight:800;
-    }
+.timerRow{display:flex;align-items:center;gap:12px;}
+#countdown{font-size:56px;font-weight:900;color:var(--primary);min-width:90px;}
+.bar{flex:1;height:14px;background:rgba(36,78,143,.15);border-radius:999px;overflow:hidden;}
+.bar div{height:100%;width:0%;background:var(--primary);transition:width .2s linear;}
 
+.gameCard{
+  position:relative;
+  width:100%;
+  height:min(62vh,560px);
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size:contain;
+  display:flex;
+  flex-direction:column;
+  padding:56px 44px 46px;
+}
 
-    /* Game card (uses background images, fits screen) */
-    .gameCard{
-      position:relative;
-      margin: 2px auto 0;
-      width: 100%;
-      max-width: 520px;
-      height: min(62vh, 560px); /* fit on mobile */
-      background-repeat:no-repeat;
-      background-position:center;
-      background-size: contain;
-      display:flex;
-      flex-direction:column;
-      align-items:stretch;
-      justify-content:flex-start;
-      padding: 56px 44px 46px; /* tuned for card art; adjust if needed */
-      filter: drop-shadow(0 14px 34px rgba(36,78,143,.18));
-    }
-    @media (orientation:portrait){
-      .gameCard{
-        background-image:url("assets/card_bg_staand.png");
-        aspect-ratio: 2 / 3;
-      }
-    }
-    @media (orientation:landscape){
-      .gameCard{
-        background-image:url("assets/card_bg_liggend.png");
-        aspect-ratio: 3 / 2;
-        height: min(60vh, 420px);
-        padding: 44px 52px 40px;
-      }
-    }
+@media (orientation:portrait){
+  .gameCard{
+    background-image:url("assets/card_bg_staand.png");
+  }
+  #question{font-size:22px;}
+  #answerValue{font-size:24px;}
+}
 
-    .ribbon{
-      width:min(78%, 380px);
-      height:auto;
-      margin: 0 auto 10px;
-      display:block;
-      pointer-events:none;
-      user-select:none;
-    }
+@media (orientation:landscape){
+  .gameCard{
+    background-image:url("assets/card_bg_liggend.png");
+    height:min(60vh,420px);
+    padding:40px 52px;
+  }
+  .ribbon{width:50%;}
+}
 
-    .cardMeta{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:flex-start;
-      margin-bottom:10px;
-    }
-    .pillMeta{
-      display:inline-flex;
-      align-items:center;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid rgba(36,78,143,.22);
-      background: rgba(247,251,255,.75);
-      color: var(--primary);
-      font-weight:900;
-      font-size:12px;
-      max-width:100%;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      white-space:nowrap;
-    }
+.ribbon{
+  position:absolute;
+  top:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:70%;
+  max-width:360px;
+}
 
-    .qText{ font-size:20px; font-weight:850; }
-    .aText{ font-size:22px; font-weight:950; }
+.pill{
+  font-size:12px;
+  font-weight:900;
+  color:var(--primary);
+  margin-top:40px;
+}
 
+#question{font-weight:800;}
+#answerValue{font-weight:900;margin-top:14px;}
 
-    /* Timer */
-    .timerRow{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding:6px 2px;
-    }
-    #countdown{
-      font-size:56px;
-      font-weight:950;
-      line-height:1;
-      color:var(--primary);
-      width:110px;
-      text-align:left;
-    }
-    @media (min-width:520px){
-      #countdown{font-size:64px; width:130px;}
-    }
+#intro{
+  position:fixed;
+  inset:0;
+  background:#F7FBFF;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:opacity .8s ease;
+}
 
-    .bar{
-      flex:1;
-      height:14px;
-      background: rgba(36,78,143,.10);
-      border-radius:999px;
-      overflow:hidden;
-      border: 1px solid rgba(36,78,143,.18);
-    }
-    .bar > div{
-      height:100%;
-      width:0%;
-      background: rgba(36,78,143,.95);
-      border-radius:999px;
-      transition: width .18s linear;
-    }
+#intro img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
 
-    .shake{
-      animation: shake .22s linear infinite;
-    }
-    @keyframes shake{
-      0%{transform:translateX(0)}
-      25%{transform:translateX(-2px)}
-      50%{transform:translateX(2px)}
-      75%{transform:translateX(-1px)}
-      100%{transform:translateX(0)}
-    }
-
-    /* Sticky bottom actions */
-    .stickyActions{
-      position:sticky;
-      bottom:10px;
-      display:flex;
-      gap:10px;
-      margin-top:auto;
-      padding-top:6px;
-    }
-
-    .btn{
-      flex:1;
-      border-radius: 14px;
-      padding:14px 14px;
-      font-size:16px;
-      font-weight:950;
-      cursor:pointer;
-      box-shadow: var(--shadow);
-      border:1px solid transparent;
-    }
-    .btn.primary{
-      background: var(--primary);
-      color:#fff;
-    }
-    .btn.primary:active{transform: translateY(1px);}
-    .btn.outline{
-      background: transparent;
-      color: var(--primary);
-      border-color: var(--primary);
-      box-shadow:none;
-    }
-    .btn:disabled{opacity:.55; cursor:not-allowed;}
-
-    .footerStatus{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-      margin-top:2px;
-    }
-
-    /* Settings */
-    .setting{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 14px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.90);
-      border: 1px solid rgba(36,78,143,.14);
-      margin-bottom:12px;
-    }
-    .setting .name{
-      font-weight:900;
-      font-size:14px;
-      color:var(--text);
-    }
-    .setting .desc{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.2;
-    }
-    .toggle{
-      width:54px; height:32px;
-      border-radius:999px;
-      background: rgba(36,78,143,.14);
-      border: 1px solid rgba(36,78,143,.18);
-      position:relative;
-      cursor:pointer;
-      flex:0 0 auto;
-    }
-    .toggle::after{
-      content:"";
-      position:absolute;
-      top:50%;
-      left:4px;
-      transform:translateY(-50%);
-      width:24px; height:24px;
-      border-radius:999px;
-      background:#fff;
-      box-shadow: 0 6px 16px rgba(36,78,143,.18);
-      transition: left .15s ease;
-    }
-    .toggle.on{background: rgba(36,78,143,.35);}
-    .toggle.on::after{left:26px;}
-
-    select, button.small{
-      border:1px solid rgba(36,78,143,.22);
-      border-radius:14px;
-      padding:10px 12px;
-      font-weight:900;
-      background: rgba(255,255,255,.88);
-      color: var(--primary);
-      cursor:pointer;
-    }
-
-    /* Category modal */
-    #catModal{
-      position:fixed; inset:0;
-      background: rgba(15,23,42,.38);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      padding:14px;
-      z-index:9998;
-    }
-    #catModal.open{display:flex;}
-    #catSheet{
-      width:min(520px, 100%);
-      max-height:78vh;
-      overflow:auto;
-      background: rgba(255,255,255,.96);
-      border: 1px solid rgba(36,78,143,.18);
-      border-radius: 22px;
-      box-shadow: 0 24px 80px rgba(36,78,143,.22);
-      padding:14px;
-    }
-    .sheetTop{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; margin-bottom:10px;
-    }
-    .sheetTop .h{
-      font-weight:950;
-      font-size:16px;
-      color:var(--primary);
-    }
-    .catControls{display:flex; gap:10px; margin:10px 0;}
-    .catControls button{
-      flex:1;
-      padding:10px 10px;
-      border-radius:14px;
-      border:1px solid rgba(36,78,143,.28);
-      background: rgba(255,255,255,.92);
-      color: var(--primary);
-      font-weight:950;
-      cursor:pointer;
-    }
-    .catItem{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 10px;
-      border-radius:14px;
-      background: rgba(36,78,143,.06);
-      border: 1px solid rgba(36,78,143,.12);
-      margin-bottom:8px;
-    }
-    .catItem .nm{font-weight:900; font-size:14px; color:var(--text);}
-  </style>
+.fade-out{opacity:0;pointer-events:none;}
+</style>
 </head>
+
 <body>
 
-  <div id="intro" aria-hidden="true">
-    <div class="media">
-      
-      <div id="introText" style="display:none;font-weight:950;font-size:44px;color:#244E8F;letter-spacing:.06em;">ESTIMANIA</div>
-      <img src="assets/intro.jpg" alt="Estimania intro"
-           onerror="this.style.display='none'; this.parentElement.textContent='(Plaats straks assets/assets/intro.jpg of assets/intro.mp4)';" />
+<div id="intro">
+  <img src="assets/intro.jpg" alt="Intro">
+</div>
 
-    </div>
-  </div>
+<div class="page">
 
-  <div id="page-main" class="page active">
-    <div class="topbar">
-      <div class="brand">
-        <div class="title">Estimania</div>
-        <div class="subtle" id="loadInfo">Vragen laden…</div>
-      </div>
-      <button class="iconbtn" id="to-settings" type="button" aria-label="Instellingen">⚙️</button>
-    </div>
+<div class="topbar">
+  <div><strong>Estimania</strong></div>
+</div>
 
-    
-    
-    <div class="mainStack">
+<div class="gameCard">
+  <img src="assets/ribbon.png" class="ribbon">
+  <div class="pill" id="category">Categorie: —</div>
+  <div id="question"></div>
+  <div id="answerValue"></div>
+</div>
 
-      <div class="gameCard" role="group" aria-label="Speelkaart">
-        <img class="ribbon" src="assets/ribbon.png" alt="Estimania" />
+<div class="timerRow">
+  <div id="countdown"></div>
+  <div class="bar"><div id="barFill"></div></div>
+</div>
 
-        <div class="cardMeta">
-          <div class="pillMeta" id="categoryPill">Categorie: —</div>
-        </div>
-
-        <div class="label">Vraag</div>
-        <div id="question" class="qText"></div>
-
-        <div style="height:14px;"></div>
-
-        <div class="label">Antwoord</div>
-        <div id="answerValue" class="aText"></div>
-      </div>
-
-      <div class="timerRow">
-        <div id="countdown"></div>
-        <div class="bar" aria-label="Tijdsbalk"><div id="barFill"></div></div>
-      </div>
-
-      <div class="stickyActions">
-        <button class="btn primary" id="btn-ask" type="button">VRAAG</button>
-        <button class="btn outline" id="btn-reveal" type="button" disabled>ESTIMANIA</button>
-      </div>
-
-      <div class="footerStatus" id="status"></div>
-    </div>
+<div class="sticky">
+  <button class="primary" id="askBtn">VRAAG</button>
+  <button class="outline" id="revealBtn">ESTIMANIA</button>
+</div>
 
 </div>
-        </div>
 
-        <div id="answer">
-          <div class="label">Antwoord</div>
-          <div class="value" id="answerValue"></div>
-        </div>
+<script>
+const askBtn = document.getElementById("askBtn");
+const revealBtn = document.getElementById("revealBtn");
+const questionEl = document.getElementById("question");
+const answerEl = document.getElementById("answerValue");
+const countdownEl = document.getElementById("countdown");
+const barFill = document.getElementById("barFill");
+const categoryEl = document.getElementById("category");
 
-        <div class="buttonsRow">
-          <button class="btn" id="btn-ask" type="button">VRAAG</button>
-          <button class="btn secondary" id="btn-reveal" type="button" disabled>ESTIMANIA</button>
-        </div>
+let questions = [];
+let timer = null;
+let duration = 15;
+let audioCtx = null;
 
-        <div class="footerStatus" id="status"></div>
-      </div>
-    </div>
-  </div>
+function initAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  }
+}
 
-  <div id="page-settings" class="page">
-    <div class="topbar">
-      <div class="brand">
-        <div class="title">Instellingen</div>
-        <div class="subtle">Slaat automatisch op</div>
-      </div>
-      <button class="iconbtn" id="back" type="button" aria-label="Terug">↩️</button>
-    </div>
+function tone(freq=800, ms=120){
+  if(!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.frequency.value = freq;
+  gain.gain.value = 0.1;
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start();
+  setTimeout(()=>{osc.stop();},ms);
+}
 
-    <div class="card">
-      <div class="setting">
-        <div class="left">
-          <div class="name">Achtergrondmuziek</div>
-          <div class="desc">Speelt assets/background.mp3 (loop). Standaard uit, volume 20%.</div>
-        </div>
-        <div class="toggle" id="toggle-bgm" role="switch" aria-checked="false"></div>
-      </div>
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "nl-NL";
+  utter.volume = 1;
+  window.speechSynthesis.speak(utter);
+}
 
-      <div class="setting">
-        <div class="left">
-          <div class="name">Stem (vraag oplezen)</div>
-          <div class="desc">Nederlandse stem (nl-NL). Standaard aan.</div>
-        </div>
-        <div class="toggle on" id="toggle-tts" role="switch" aria-checked="true"></div>
-      </div>
-      <div class="setting">
-        <div class="left">
-          <div class="name">Geluid effecten</div>
-          <div class="desc">Countdown-tune + piepjes. Standaard aan.</div>
-        </div>
-        <div class="toggle on" id="toggle-sfx" role="switch" aria-checked="true"></div>
-      </div>
+function loadData(){
+  fetch("VragenDatabase.json")
+  .then(r=>r.json())
+  .then(d=>{questions=d;})
+  .catch(()=>{
+    questions=[{
+      Vraag:"Is dit een test vraag?",
+      Verwacht:"Ja dit is een testvraag.",
+      Categorie:"Test"
+    }];
+  });
+}
 
-      <div class="setting">
-        <div class="left">
-          <div class="name">Duur antwoordtijd</div>
-          <div class="desc">Kies 15s, 30s of 45s (tune: assets/15s.mp3 / assets/30s.mp3 / assets/45s.mp3).</div>
-        </div>
-        <select id="sel-duration" aria-label="Duur">
-          <option value="15">15s</option>
-          <option value="30">30s</option>
-          <option value="45">45s</option>
-          <option value="inf">∞</option>
-        </select>
-      </div>
+function startQuestion(){
+  initAudio();
+  if(questions.length===0){
+    questions=[{
+      Vraag:"Is dit een test vraag?",
+      Verwacht:"Ja dit is een testvraag.",
+      Categorie:"Test"
+    }];
+  }
+  const q = questions[Math.floor(Math.random()*questions.length)];
+  questionEl.textContent=q.Vraag;
+  answerEl.textContent="";
+  categoryEl.textContent="Categorie: "+(q.Categorie||"Algemeen");
+  speak(q.Vraag);
+  runTimer(q);
+}
 
-      <div class="setting">
-        <div class="left">
-          <div class="name">Lastigheid</div>
-          <div class="desc">Filtert vragen op Moeilijkheid (makkelijk/medium/lastig).</div>
-        </div>
-        <select id="sel-difficulty" aria-label="Lastigheid">
-          <option value="makkelijk">makkelijk</option>
-          <option value="medium" selected>medium</option>
-          <option value="lastig">lastig</option>
-        </select>
-      </div>
-
-      <div class="setting">
-        <div class="left">
-          <div class="name">Categorieën</div>
-          <div class="desc">Kies welke categorieën meedoen (alfabetisch).</div>
-        </div>
-        <button class="small" id="btn-categories" type="button">Selecteer</button>
-      </div>
-
-      <div class="footerStatus" id="settingsStatus"></div>
-    </div>
-  </div>
-
-  <div id="catModal" aria-hidden="true">
-    <div id="catSheet">
-      <div class="sheetTop">
-        <div class="h">Categorieën</div>
-        <button class="small" id="catClose" type="button">Sluit</button>
-      </div>
-
-      <div class="catControls">
-        <button id="catAll" type="button">Selecteer alles</button>
-        <button id="catNone" type="button">Deselecteer alles</button>
-      </div>
-
-      <div id="catList"></div>
-      <div class="footerStatus" id="catStatus"></div>
-    </div>
-  </div>
-
-  <audio id="introAudio" src="assets/intro.mp3" preload="auto"></audio>
-  <audio id="bgm" src="assets/background.mp3" loop preload="auto"></audio>
-  <audio id="tune15" src="assets/15s.mp3" preload="auto"></audio>
-  <audio id="tune30" src="assets/30s.mp3" preload="auto"></audio>
-  <audio id="tune45" src="assets/45s.mp3" preload="auto"></audio>
-
-  <script>
-    const DB_FILES = ["VragenDatabase.json", "ActueleVragen.json"];
-
-    const KEY = {
-      bgm: "estimania_bgm_v1",
-      tts: "estimania_tts_v1",
-      duration: "estimania_duration_v1",
-      difficulty: "estimania_difficulty_v1",
-      categories: "estimania_categories_v1",
-      sfx: "estimania_sfx_v1"
-    };
-
-    const introEl = document.getElementById("intro");
-    const introAudio = document.getElementById("introAudio");
-    const introText = document.getElementById("introText");
-    const pageMain = document.getElementById("page-main");
-    const pageSettings = document.getElementById("page-settings");
-
-    const toSettingsBtn = document.getElementById("to-settings");
-    const backBtn = document.getElementById("back");
-
-    const questionEl = document.getElementById("question");
-    const categoryPill = document.getElementById("categoryPill");
-    const countdownEl = document.getElementById("countdown");
-    const barFill = document.getElementById("barFill");
-const answerValueEl = document.getElementById("answerValue");
-    const statusEl = document.getElementById("status");
-    const loadInfoEl = document.getElementById("loadInfo");
-
-    const askBtn = document.getElementById("btn-ask");
-    const revealBtn = document.getElementById("btn-reveal");
-
-    const toggleBgm = document.getElementById("toggle-bgm");
-    const toggleTts = document.getElementById("toggle-tts");
-    const toggleSfx = document.getElementById("toggle-sfx");
-    const selDuration = document.getElementById("sel-duration");
-    const selDifficulty = document.getElementById("sel-difficulty");
-    const btnCategories = document.getElementById("btn-categories");
-    const settingsStatus = document.getElementById("settingsStatus");
-
-    const catModal = document.getElementById("catModal");
-    const catList = document.getElementById("catList");
-    const catClose = document.getElementById("catClose");
-    const catAll = document.getElementById("catAll");
-    const catNone = document.getElementById("catNone");
-    const catStatus = document.getElementById("catStatus");
-
-    const bgm = document.getElementById("bgm");
-    const tune15 = document.getElementById("tune15");
-    const tune30 = document.getElementById("tune30");
-    const tune45 = document.getElementById("tune45");
-
-    let allQuestions = [];
-    let pool = [];
-    let usedIdx = 0;
-
-    let current = null;
-    let timer = null;
-    let tLeft = 0;
-    let tTotal = 30;
-
-    let audioUnlocked = false;
-
-    let settings = {
-      bgm: false,
-      tts: true,
-      duration: 30,
-      difficulty: "medium",
-      categories: null, // null => all
-      sfx: true
-    };
-
-    function showPage(which){
-      pageMain.classList.toggle("active", which === "main");
-      pageSettings.classList.toggle("active", which === "settings");
+function runTimer(q){
+  clearInterval(timer);
+  let t=duration;
+  countdownEl.textContent=t;
+  barFill.style.width="100%";
+  timer=setInterval(()=>{
+    t--;
+    if(t<=3 && t>0) tone(900,80);
+    if(t<=0){
+      clearInterval(timer);
+      tone(200,300);
+      revealAnswer(q);
     }
+    countdownEl.textContent=t>0?t:"0";
+    barFill.style.width=(t/duration*100)+"%";
+  },1000);
+}
+
+function revealAnswer(q){
+  answerEl.textContent=q.Verstacht||q.Verwacht||"";
+}
+
+askBtn.onclick=startQuestion;
+revealBtn.onclick=()=>{
+  if(questionEl.textContent){
+    revealAnswer({Verwacht:answerEl.textContent});
+  }
+};
+
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    document.getElementById("intro").classList.add("fade-out");
+  },3000);
+});
+
+loadData();
+</script>
 
-    function setToggle(el, on){
-      el.classList.toggle("on", !!on);
-      el.setAttribute("aria-checked", on ? "true" : "false");
-    }
-
-    function saveSettings(){
-      localStorage.setItem(KEY.bgm, settings.bgm ? "1" : "0");
-      localStorage.setItem(KEY.tts, settings.tts ? "1" : "0");
-      localStorage.setItem(KEY.duration, settings.duration === "inf" ? "inf" : String(settings.duration));
-      localStorage.setItem(KEY.difficulty, String(settings.difficulty));
-      localStorage.setItem(KEY.categories, settings.categories ? JSON.stringify([...settings.categories]) : "");
-      localStorage.setItem(KEY.sfx, settings.sfx ? "1" : "0");
-      settingsStatus.textContent = "Opgeslagen.";
-      setTimeout(() => { if (settingsStatus.textContent === "Opgeslagen.") settingsStatus.textContent = ""; }, 900);
-    }
-
-    function loadSettings(){
-      const bgmV = localStorage.getItem(KEY.bgm);
-      const ttsV = localStorage.getItem(KEY.tts);
-      const durV = localStorage.getItem(KEY.duration);
-      const difV = localStorage.getItem(KEY.difficulty);
-      const catV = localStorage.getItem(KEY.categories);
-      const sfxV = localStorage.getItem(KEY.sfx);
-
-      settings.bgm = bgmV === "1";
-      settings.tts = (ttsV === null) ? true : (ttsV === "1");
-      settings.duration = durV ? (durV === "inf" ? "inf" : parseInt(durV, 10)) : 30;
-      settings.difficulty = difV || "medium";
-
-      settings.sfx = (sfxV === null) ? true : (sfxV === "1");
-
-      if (catV && catV.trim().length > 0){
-        try { settings.categories = new Set(JSON.parse(catV)); }
-        catch { settings.categories = null; }
-      } else {
-        settings.categories = null;
-      }
-    }
-
-    function updateSettingsUI(){
-      setToggle(toggleBgm, settings.bgm);
-      setToggle(toggleTts, settings.tts);
-      setToggle(toggleSfx, settings.sfx);
-      selDuration.value = (settings.duration === "inf") ? "inf" : String(settings.duration);
-      selDifficulty.value = String(settings.difficulty);
-
-      bgm.volume = 0.2;
-      if (!settings.bgm) safePause(bgm);
-    }
-
-    function safePause(a){ try { a.pause(); } catch {} }
-    function safeStop(a){ try { a.pause(); a.currentTime = 0; } catch {} }
-    async function safePlay(a){
-      try {
-        const p = a.play();
-        if (p && typeof p.catch === "function") await p;
-      } catch {}
-    }
-
-    function normalizeDifficulty(v){
-      const s = String(v ?? "").toLowerCase().trim();
-      if (!s) return "";
-      if (["makkelijk","easy","eenvoudig","1"].includes(s)) return "makkelijk";
-      if (["medium","gemiddeld","2"].includes(s)) return "medium";
-      if (["lastig","moeilijk","hard","3"].includes(s)) return "lastig";
-      return s;
-    }
-
-    function getCategory(q){
-      return (q.Categorie ?? q.categorie ?? q.Category ?? q.category ?? "Algemeen").toString().trim() || "Algemeen";
-    }
-    function getQuestionText(q){
-      return (q.Vraag ?? q.vraag ?? q.Question ?? q.question ?? "").toString().trim();
-    }
-    function getAnswerText(q){
-      const verwacht = (q.Verwacht ?? q.verwacht);
-      const exact = (q.Exact ?? q.exact);
-      const unit = (q.Unit ?? q.unit ?? "").toString().trim();
-
-      let base = "";
-      if (verwacht !== undefined && verwacht !== null && String(verwacht).trim() !== "") base = String(verwacht);
-      else if (exact !== undefined && exact !== null && String(exact).trim() !== "") base = String(exact);
-      else base = "—";
-
-      return unit ? `${base} ${unit}` : base;
-    }
-
-    function pickDutchNLVoice(){
-      if (!("speechSynthesis" in window)) return null;
-      const voices = window.speechSynthesis.getVoices() || [];
-      const nlNL = voices.find(v => (v.lang || "").toLowerCase() === "nl-nl");
-      if (nlNL) return nlNL;
-
-      const nlNL2 = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl-nl"));
-      if (nlNL2) return nlNL2;
-
-      const nlNotBE = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl") && (v.lang || "").toLowerCase() !== "nl-be");
-      if (nlNotBE) return nlNotBE;
-
-      const anyNL = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl"));
-      return anyNL || null;
-    }
-
-    function speak(text){
-      if (!settings.tts) return;
-      try {
-        if (!("speechSynthesis" in window)) return;
-        window.speechSynthesis.cancel();
-
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = "nl-NL";
-        u.rate = 1.0;
-        u.pitch = 1.0;
-        u.volume = 1.0;
-
-        const v = pickDutchNLVoice();
-        if (v) u.voice = v;
-
-        window.speechSynthesis.speak(u);
-      } catch {}
-    }
-
-    function warmupSpeech(){
-      try {
-        if (!("speechSynthesis" in window)) return;
-        const u = new SpeechSynthesisUtterance(" ");
-        u.lang = "nl-NL";
-        u.volume = 0;
-        window.speechSynthesis.speak(u);
-      } catch {}
-    }
-
-    async function unlockAudioOnce(){
-      if (audioUnlocked) return;
-      audioUnlocked = true;
-
-      try { bgm.volume = 0.2; await safePlay(bgm); bgm.pause(); bgm.currentTime = 0; } catch {}
-      try { await safePlay(tune15); tune15.pause(); tune15.currentTime = 0; } catch {}
-      try { await safePlay(tune30); tune30.pause(); tune30.currentTime = 0; } catch {}
-      try { await safePlay(tune45); tune45.pause(); tune45.currentTime = 0; } catch {}
-    }
-
-    function tone(freq=880, ms=120, vol=0.09){
-      try {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        if (!AC) return;
-        const ctx = new AC();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        gain.gain.value = vol;
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        setTimeout(() => {
-          osc.stop();
-          ctx.close && ctx.close();
-        }, ms);
-      } catch {}
-    }
-    function tickBeep(){ if (settings.sfx) tone(880, 80, 0.08); }
-    function endBuzz(){ if (settings.sfx) tone(220, 260, 0.10); }
-    function playEndBeep(){ tickBeep(); }
-
-    function getTuneForDuration(){
-      if (settings.duration === "inf") return null;
-      if (settings.duration === 15) return tune15;
-      if (settings.duration === 45) return tune45;
-      return tune30;
-    }
-    async function playTune(){
-      if (!settings.sfx) return;
-      const a = getTuneForDuration();
-      if (!a) return;
-      try { a.currentTime = 0; await safePlay(a); } catch {}
-    }
-    function stopTune(){
-      safeStop(tune15); safeStop(tune30); safeStop(tune45);
-    }
-    async function updateBgmPlayback(){
-      bgm.volume = 0.2;
-      if (!settings.bgm) { safePause(bgm); return; }
-      await safePlay(bgm);
-    }
-
-    async function fetchJSON(url){
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Fetch faalde (${res.status}): ${url}`);
-      return await res.json();
-    }
-
-    async function loadQuestions(){
-      const results = await Promise.allSettled(DB_FILES.map(f => fetchJSON(f)));
-      const loaded = [];
-      const loadedFiles = [];
-
-      results.forEach((r, i) => {
-        if (r.status === "fulfilled") {
-          const data = r.value;
-          const arr = Array.isArray(data) ? data : (Array.isArray(data.vragen) ? data.vragen : []);
-          loaded.push(...arr);
-          loadedFiles.push(DB_FILES[i]);
-        }
-      });
-
-      allQuestions = loaded;
-      if (loadedFiles.length === 0){
-        loadInfoEl.textContent = "Geen databestanden gevonden";
-        statusEl.textContent = `Plaats ${DB_FILES.join(" en ")} naast index.html.`;
-      } else {
-        loadInfoEl.textContent = `${loadedFiles.join(" + ")} • ${allQuestions.length} vragen`;
-      }
-
-      buildCategoriesFromData();
-      rebuildPool();
-      updateMainButtons();
-    }
-
-    let allCategories = [];
-
-    function buildCategoriesFromData(){
-      const set = new Set();
-      allQuestions.forEach(q => set.add(getCategory(q)));
-      allCategories = [...set].sort((a,b) => a.localeCompare(b, "nl"));
-    }
-
-    function openCategories(){
-      renderCategoryList();
-      catModal.classList.add("open");
-      catModal.setAttribute("aria-hidden", "false");
-    }
-    function closeCategories(){
-      catModal.classList.remove("open");
-      catModal.setAttribute("aria-hidden", "true");
-    }
-
-    function renderCategoryList(){
-      catList.innerHTML = "";
-      const sel = settings.categories;
-      const effectiveSel = sel ? new Set([...sel].filter(c => allCategories.includes(c))) : null;
-
-      allCategories.forEach(cat => {
-        const row = document.createElement("div");
-        row.className = "catItem";
-
-        const nm = document.createElement("div");
-        nm.className = "nm";
-        nm.textContent = cat;
-
-        const cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.checked = effectiveSel ? effectiveSel.has(cat) : true;
-
-        cb.addEventListener("change", () => {
-          if (!settings.categories) settings.categories = new Set(allCategories);
-          if (cb.checked) settings.categories.add(cat);
-          else settings.categories.delete(cat);
-
-          saveSettings();
-          catStatus.textContent = `${settings.categories.size}/${allCategories.length} geselecteerd`;
-          rebuildPool();
-          updateMainButtons();
-        });
-
-        row.appendChild(nm);
-        row.appendChild(cb);
-        catList.appendChild(row);
-      });
-
-      catStatus.textContent = settings.categories
-        ? `${settings.categories.size}/${allCategories.length} geselecteerd`
-        : `Alle categorieën geselecteerd (${allCategories.length})`;
-    }
-
-    function selectAllCategories(){
-      settings.categories = null;
-      saveSettings();
-      renderCategoryList();
-      rebuildPool();
-      updateMainButtons();
-    }
-    function deselectAllCategories(){
-      settings.categories = new Set();
-      saveSettings();
-      renderCategoryList();
-      rebuildPool();
-      updateMainButtons();
-    }
-
-    function rebuildPool(){
-      const wantDiff = normalizeDifficulty(settings.difficulty);
-      const catSet = settings.categories;
-
-      const filtered = allQuestions.filter(q => {
-        const qt = getQuestionText(q);
-        if (!qt) return false;
-
-        const qdiff = normalizeDifficulty(q.Moeilijkheid ?? q.moeilijkheid ?? q.Difficulty ?? q.difficulty);
-        if (wantDiff && qdiff && qdiff !== wantDiff) return false;
-        if (wantDiff && !qdiff) { if (wantDiff !== "medium") return false; }
-
-        if (catSet && !catSet.has(getCategory(q))) return false;
-        return true;
-      });
-
-      for (let i = filtered.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
-      }
-
-      pool = filtered;
-      usedIdx = 0;
-
-      statusEl.textContent = pool.length > 0
-        ? `Klaar • ${pool.length} vragen (lastigheid: ${settings.difficulty})`
-        : `Geen vragen voor huidige filters (lastigheid/categorieën).`;
-
-      if (pool.length === 0) {
-        current = null;
-        resetQA();
-      }
-    }
-
-    function updateMainButtons(){
-      const canAsk = pool.length > 0;
-      askBtn.disabled = !canAsk;
-      revealBtn.disabled = true;
-    }
-
-    function resetQA(){
-      stopTimer();
-      stopTune();
-      questionEl.textContent = "";
-      if (categoryPill) { categoryPill.textContent = "Categorie: —"; categoryPill.title=""; }
-      countdownEl.textContent = "";
-      barFill.style.width = "0%";      answerValueEl.textContent = "";
-      revealBtn.disabled = true;
-    }
-
-    function stopTimer(){
-      if (timer) { clearInterval(timer); timer = null; }
-    }
-
-    function setProgress(remaining, total){
-      const pct = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
-      barFill.style.width = `${pct * 100}%`;
-    }
-
-    function pickNextQuestion(){
-      if (pool.length === 0) return null;
-      if (usedIdx >= pool.length) {
-        rebuildPool();
-        if (pool.length === 0) return null;
-      }
-      return pool[usedIdx++];
-    }
-
-    async function startQuestion(){
-      resetQA();
-      current = pickNextQuestion();
-      if (!current) return;
-
-      tTotal = settings.duration;
-      if (tTotal === "inf") {
-        tLeft = null;
-      } else {
-        tLeft = tTotal;
-      }
-
-      questionEl.textContent = getQuestionText(current);
-
-      if (categoryPill) {
-        const c = getCategory(current);
-        categoryPill.textContent = `Categorie: ${c}`;
-        categoryPill.title = c;
-      }
-      countdownEl.style.color = "var(--primary)";
-      countdownEl.classList.remove("shake");
-      countdownEl.textContent = (tLeft === null) ? "∞" : String(tLeft);
-      setProgress((tLeft === null) ? 1 : tLeft, (tTotal === "inf") ? 1 : tTotal);      answerValueEl.textContent = "";
-      revealBtn.disabled = false;
-
-      speak(getQuestionText(current));
-      stopTune();
-      await playTune();
-
-      await updateBgmPlayback();
-
-      if (tLeft === null) {
-        // Oneindig: geen timer, geen tune (behalve als je zelf een ambient wilt)
-        countdownEl.style.color = "var(--primary)";
-        barFill.style.width = "100%";
-        return;
-      }
-
-      timer = setInterval(() => {
-        tLeft -= 1;
-        if (tLeft > 0) {
-          countdownEl.style.color = "var(--primary)";
-      countdownEl.classList.remove("shake");
-      countdownEl.textContent = (tLeft === null) ? "∞" : String(tLeft);
-          setProgress((tLeft === null) ? 1 : tLeft, (tTotal === "inf") ? 1 : tTotal);
-        } else {
-          stopTimer();
-          stopTune();
-          countdownEl.textContent = "0";
-          setProgress(0, tTotal);
-          endBuzz();
-          revealAnswer(false);
-        }
-      }, 1000);
-    }
-
-    function revealAnswer(userPressed=true){
-      if (!current) return;
-      stopTimer();
-      stopTune();
-      countdownEl.textContent = "";
-      barFill.style.width = "0%";
-
-      answerValueEl.textContent = getAnswerText(current);      revealBtn.disabled = true;
-    }
-
-    toSettingsBtn.addEventListener("click", () => {
-      showPage("settings");
-      updateSettingsUI();
-      settingsStatus.textContent = "";
-    });
-
-    backBtn.addEventListener("click", () => {
-      showPage("main");
-    });
-
-    askBtn.addEventListener("click", async () => {
-      await unlockAudioOnce();
-      warmupSpeech();
-      await updateBgmPlayback();
-      await startQuestion();
-    });
-
-    revealBtn.addEventListener("click", async () => {
-      await unlockAudioOnce();
-      await updateBgmPlayback();
-      revealAnswer(true);
-    });
-
-    toggleBgm.addEventListener("click", async () => {
-      settings.bgm = !settings.bgm;
-      setToggle(toggleBgm, settings.bgm);
-      saveSettings();
-      await unlockAudioOnce();
-      await updateBgmPlayback();
-    });
-
-    toggleSfx.addEventListener("click", () => {
-      settings.sfx = !settings.sfx;
-      setToggle(toggleSfx, settings.sfx);
-      saveSettings();
-      if (!settings.sfx) stopTune();
-    });
-
-    toggleTts.addEventListener("click", () => {
-      settings.tts = !settings.tts;
-      setToggle(toggleTts, settings.tts);
-      setToggle(toggleSfx, settings.sfx);
-      saveSettings();
-    });
-
-    selDuration.addEventListener("change", () => {
-      settings.duration = (selDuration.value === "inf") ? "inf" : parseInt(selDuration.value, 10);
-      saveSettings();
-      stopTimer();
-      stopTune();
-      countdownEl.textContent = "";
-      barFill.style.width = "0%";
-    });
-
-    selDifficulty.addEventListener("change", () => {
-      settings.difficulty = selDifficulty.value;
-      saveSettings();
-      rebuildPool();
-      updateMainButtons();
-    });
-
-    btnCategories.addEventListener("click", () => openCategories());
-
-    catClose.addEventListener("click", () => closeCategories());
-    catModal.addEventListener("click", (e) => { if (e.target === catModal) closeCategories(); });
-
-    catAll.addEventListener("click", () => selectAllCategories());
-    catNone.addEventListener("click", () => deselectAllCategories());
-
-    async function boot(){
-      // Intro audio (best effort). Autoplay may be blocked on mobile; if so, show text fallback.
-      try {
-        const p = introAudio && introAudio.play ? introAudio.play() : null;
-        if (p && typeof p.catch === "function") {
-          p.catch(() => {
-            if (introText) introText.style.display = "block";
-          });
-        }
-      } catch {
-        if (introText) introText.style.display = "block";
-      }
-
-      setTimeout(() => {
-        introEl.style.display = "none";
-        introEl.setAttribute("aria-hidden","true");
-      }, 3000);
-
-      loadSettings();
-      updateSettingsUI();
-      bgm.volume = 0.2;
-
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.onvoiceschanged = () => {};
-      }
-
-      await loadQuestions();
-    }
-
-    boot();
-  </script>
 </body>
 </html>
