@@ -1,0 +1,452 @@
+[
+  {
+    "id": "Q0001",
+    "categorie": "Sport",
+    "vraag": "Hoeveel meter is de officiële marathonafstand?",
+    "exact": 42195.0,
+    "unit": "duizend meter",
+    "verwacht": 42.2,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0002",
+    "categorie": "Sport",
+    "vraag": "Hoeveel meter is de officiële halve-marathonafstand?",
+    "exact": 21097.5,
+    "unit": "duizend meter",
+    "verwacht": 21.1,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0003",
+    "categorie": "Sport",
+    "vraag": "Hoe hoog hangt een basketbalring volgens de norm (in cm)?",
+    "exact": 305.0,
+    "unit": "cm",
+    "verwacht": 305.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0004",
+    "categorie": "Sport",
+    "vraag": "Hoe breed is een voetbaldoel volgens de spelregels (in cm)?",
+    "exact": 732.0,
+    "unit": "cm",
+    "verwacht": 732.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0005",
+    "categorie": "Sport",
+    "vraag": "Hoe hoog is een voetbaldoel volgens de spelregels (in cm)?",
+    "exact": 244.0,
+    "unit": "cm",
+    "verwacht": 244.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0006",
+    "categorie": "Sport",
+    "vraag": "Hoe lang is een olympisch zwembad (in meter)?",
+    "exact": 50.0,
+    "unit": "meter",
+    "verwacht": 50.0,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0007",
+    "categorie": "Sport",
+    "vraag": "Hoe lang is een tafeltennistafel (in cm)?",
+    "exact": 274.0,
+    "unit": "cm",
+    "verwacht": 274.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0008",
+    "categorie": "Sport",
+    "vraag": "Hoe breed is een tafeltennistafel (in cm)?",
+    "exact": 152.5,
+    "unit": "cm",
+    "verwacht": 153.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0009",
+    "categorie": "Sport",
+    "vraag": "Hoe hoog is het tennisnet in het midden (in cm)?",
+    "exact": 91.4,
+    "unit": "cm",
+    "verwacht": 91.4,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0010",
+    "categorie": "Sport",
+    "vraag": "Hoe hoog is het tennisnet bij de palen (in cm)?",
+    "exact": 107.0,
+    "unit": "cm",
+    "verwacht": 107.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0011",
+    "categorie": "Wetenschap",
+    "vraag": "Wat is de lichtsnelheid in vacuüm (in m/s)?",
+    "exact": 299792458.0,
+    "unit": "miljoen m/s",
+    "verwacht": 300.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0012",
+    "categorie": "Wetenschap",
+    "vraag": "Wat is de standaardluchtdruk (1 atm) in pascal?",
+    "exact": 101325.0,
+    "unit": "duizend pascal",
+    "verwacht": 101.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0013",
+    "categorie": "Wetenschap",
+    "vraag": "Wat is de standaardzwaartekrachtsversnelling g (in m/s²)?",
+    "exact": 9.80665,
+    "unit": "m/s²",
+    "verwacht": 9.8,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0014",
+    "categorie": "Wetenschap",
+    "vraag": "Hoeveel seconden zitten er in 1 uur?",
+    "exact": 3600.0,
+    "unit": "duizend seconden",
+    "verwacht": 3.6,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0015",
+    "categorie": "Wetenschap",
+    "vraag": "Hoeveel seconden zitten er in 1 dag?",
+    "exact": 86400.0,
+    "unit": "duizend seconden",
+    "verwacht": 86.4,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0016",
+    "categorie": "Wetenschap",
+    "vraag": "Hoeveel minuten zitten er in 1 dag?",
+    "exact": 1440.0,
+    "unit": "duizend minuten",
+    "verwacht": 1.4,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0017",
+    "categorie": "Wetenschap",
+    "vraag": "Hoeveel seconden zitten er in 1 week?",
+    "exact": 604800.0,
+    "unit": "duizend seconden",
+    "verwacht": 605.0,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0018",
+    "categorie": "Wetenschap",
+    "vraag": "Bij hoeveel kelvin bevriest water (0 °C)?",
+    "exact": 273.15,
+    "unit": "kelvin",
+    "verwacht": 273.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0019",
+    "categorie": "Wetenschap",
+    "vraag": "Bij hoeveel kelvin kookt water bij 1 atm (100 °C)?",
+    "exact": 373.15,
+    "unit": "kelvin",
+    "verwacht": 373.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0020",
+    "categorie": "Wetenschap",
+    "vraag": "Hoeveel joule is 1 calorie (thermochemisch)?",
+    "exact": 4.184,
+    "unit": "joule",
+    "verwacht": 4.2,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0021",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Wat is de omtrek van de aarde bij de evenaar (in meter)?",
+    "exact": 40075017.0,
+    "unit": "miljoen meter",
+    "verwacht": 40.1,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0022",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Wat is de gemiddelde straal van de aarde (in km)?",
+    "exact": 6371.0,
+    "unit": "duizend km",
+    "verwacht": 6.4,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0023",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Wat is het aardoppervlak (incl. land + oceaan) in km²?",
+    "exact": 510072000.0,
+    "unit": "miljoen km2",
+    "verwacht": 510.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0024",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Wat is 1 astronomische eenheid (AU) in km?",
+    "exact": 149597870.7,
+    "unit": "miljoen km",
+    "verwacht": 150.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0025",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Wat is de gemiddelde afstand aarde–maan (in km)?",
+    "exact": 384400.0,
+    "unit": "duizend km",
+    "verwacht": 384.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0026",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Hoeveel m² is 1 km²?",
+    "exact": 1000000.0,
+    "unit": "miljoen m2",
+    "verwacht": 1.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0027",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Hoeveel m² is 1 hectare?",
+    "exact": 10000.0,
+    "unit": "duizend m2",
+    "verwacht": 10.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0028",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Hoeveel meter is 1 zeemijl?",
+    "exact": 1852.0,
+    "unit": "duizend meter",
+    "verwacht": 1.9,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0029",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Hoeveel meter is 1 (statute) mile?",
+    "exact": 1609.344,
+    "unit": "duizend meter",
+    "verwacht": 1.6,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0030",
+    "categorie": "Aardrijkskunde",
+    "vraag": "Hoeveel cm is 1 foot?",
+    "exact": 30.48,
+    "unit": "cm",
+    "verwacht": 30.5,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0031",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel bytes zitten er in 1 mebibyte (MiB)?",
+    "exact": 1048576.0,
+    "unit": "miljoen bytes",
+    "verwacht": 1.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0032",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel pixels heeft 4K UHD (3840×2160)?",
+    "exact": 8294400.0,
+    "unit": "miljoen pixels",
+    "verwacht": 8.3,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0033",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel pixels heeft Full HD (1920×1080)?",
+    "exact": 2073600.0,
+    "unit": "miljoen pixels",
+    "verwacht": 2.1,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0034",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel bits zitten er in 1 megabit (Mb, decimaal)?",
+    "exact": 1000000.0,
+    "unit": "miljoen bits",
+    "verwacht": 1.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0035",
+    "categorie": "Technologie",
+    "vraag": "Wat is de maximale bruto datasnelheid van USB 2.0 (in bit/s)?",
+    "exact": 480000000.0,
+    "unit": "miljoen bit/s",
+    "verwacht": 480.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0036",
+    "categorie": "Technologie",
+    "vraag": "Wat is de maximale bruto datasnelheid van 100BASE-TX ethernet (in bit/s)?",
+    "exact": 100000000.0,
+    "unit": "miljoen bit/s",
+    "verwacht": 100.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0037",
+    "categorie": "Technologie",
+    "vraag": "Wat is de maximale bruto datasnelheid van gigabit-ethernet (in bit/s)?",
+    "exact": 1000000000.0,
+    "unit": "miljoen bit/s",
+    "verwacht": 1000.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0038",
+    "categorie": "Technologie",
+    "vraag": "Wat is de audio-samplerate van een standaard audio-cd (in Hz)?",
+    "exact": 44100.0,
+    "unit": "duizend Hz",
+    "verwacht": 44.1,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0039",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel bits gebruikt IEEE 754 “single precision”?",
+    "exact": 32.0,
+    "unit": "bits",
+    "verwacht": 32.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0040",
+    "categorie": "Technologie",
+    "vraag": "Hoeveel bytes is de standaard Ethernet MTU (zonder jumbo frames)?",
+    "exact": 1500.0,
+    "unit": "duizend bytes",
+    "verwacht": 1.5,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0041",
+    "categorie": "Nederland",
+    "vraag": "Hoeveel provincies heeft Nederland?",
+    "exact": 12.0,
+    "unit": "provincies",
+    "verwacht": 12.0,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0042",
+    "categorie": "Nederland",
+    "vraag": "Hoeveel zetels heeft de Tweede Kamer?",
+    "exact": 150.0,
+    "unit": "zetels",
+    "verwacht": 150.0,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0043",
+    "categorie": "Nederland",
+    "vraag": "Hoeveel zetels heeft de Eerste Kamer?",
+    "exact": 75.0,
+    "unit": "zetels",
+    "verwacht": 75.0,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0044",
+    "categorie": "Nederland",
+    "vraag": "Hoe hoog is de Vaalserberg (in meter)?",
+    "exact": 322.7,
+    "unit": "meter",
+    "verwacht": 323.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0045",
+    "categorie": "Nederland",
+    "vraag": "Hoe hoog is de Domtoren in Utrecht (in meter)?",
+    "exact": 112.32,
+    "unit": "meter",
+    "verwacht": 112.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0046",
+    "categorie": "Nederland",
+    "vraag": "Hoe hoog is de Euromast in Rotterdam (in meter)?",
+    "exact": 185.0,
+    "unit": "meter",
+    "verwacht": 185.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0047",
+    "categorie": "Nederland",
+    "vraag": "Hoe lang is de Afsluitdijk (in meter)?",
+    "exact": 32000.0,
+    "unit": "duizend meter",
+    "verwacht": 32.0,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0048",
+    "categorie": "Nederland",
+    "vraag": "Hoe lang is de Erasmusbrug (in meter)?",
+    "exact": 802.0,
+    "unit": "meter",
+    "verwacht": 802.0,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0049",
+    "categorie": "Nederland",
+    "vraag": "In welk jaar kreeg Amsterdam stadsrechten (jaar)?",
+    "exact": 1275.0,
+    "unit": "duizend jaar",
+    "verwacht": 1.3,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0050",
+    "categorie": "Nederland",
+    "vraag": "In welk jaar was de laatste Elfstedentocht (jaar)?",
+    "exact": 1997.0,
+    "unit": "duizend jaar",
+    "verwacht": 2.0,
+    "Moeilijkheid": 2
+  }
+]

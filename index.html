@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estimania</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111827;
+      --text:#f9fafb;
+      --muted:#9ca3af;
+      --accent:#ffffff;
+      --danger:#f87171;
+      --radius:18px;
+      --shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 800px at 50% -10%, #1f2937 0%, var(--bg) 55%);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    /* Intro overlay (2s, optional asset) */
+    #intro{
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      background: #050a14;
+      z-index:9999;
+    }
+    #intro .media{
+      width:min(92vw, 480px);
+      aspect-ratio: 9/16;
+      border-radius:24px;
+      overflow:hidden;
+      background:#0f172a;
+      box-shadow: 0 24px 80px rgba(0,0,0,.55);
+      display:flex; align-items:center; justify-content:center;
+      color:#e5e7eb;
+      text-align:center;
+      padding:18px;
+    }
+    #intro img, #intro video{width:100%; height:100%; object-fit:cover; display:block;}
+
+    /* Pages */
+    .page{
+      display:none;
+      max-width:520px;
+      margin:0 auto;
+      min-height:100vh;
+      padding:16px 14px 24px;
+      gap:14px;
+      flex-direction:column;
+    }
+    .page.active{display:flex;}
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-top:6px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .brand .title{
+      font-weight:800;
+      letter-spacing:.3px;
+      font-size:18px;
+      line-height:1.1;
+    }
+    .brand .subtle{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+
+    .iconbtn{
+      border:none;
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      width:44px; height:44px;
+      border-radius:14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      font-size:20px;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .iconbtn:active{transform: translateY(1px);}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:16px;
+    }
+
+    /* Main content area (fixed heights so buttons don't jump) */
+    .qa{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:4px 2px 2px;
+    }
+    #question{
+      min-height:96px;
+      display:flex; align-items:center; justify-content:center;
+      text-align:center;
+      font-size:22px;
+      font-weight:800;
+      line-height:1.2;
+    }
+    #countWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      height:56px;
+      margin-top:2px;
+    }
+    #countdown{
+      width:78px;
+      text-align:right;
+      font-size:44px;
+      font-weight:900;
+      color:var(--danger);
+      line-height:1;
+    }
+    .bar{
+      flex:1;
+      height:14px;
+      background: rgba(255,255,255,.10);
+      border-radius:999px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: rgba(255,255,255,.85);
+      border-radius:999px;
+      transition: width .2s linear;
+    }
+
+    #answer{
+      height:76px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:6px;
+      visibility:hidden; /* reserve space */
+      margin-top:4px;
+    }
+    #answer .label{
+      font-size:12px;
+      color:var(--muted);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    #answer .value{
+      font-size:22px;
+      font-weight:900;
+      text-align:center;
+      line-height:1.15;
+    }
+
+    .buttonsRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+    }
+    .btn{
+      flex:1;
+      border:none;
+      border-radius:16px;
+      padding:14px 14px;
+      font-size:16px;
+      font-weight:900;
+      cursor:pointer;
+      color:#0b1220;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+    }
+    .btn.secondary{
+      background: rgba(255,255,255,.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 12px 30px rgba(0,0,0,.20);
+    }
+    .btn:disabled{opacity:.55; cursor:not-allowed;}
+    .footerStatus{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+
+    /* Settings */
+    .setting{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:12px 12px;
+      border-radius:16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      margin-bottom:10px;
+    }
+    .setting .left{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .setting .name{
+      font-weight:850;
+      font-size:14px;
+    }
+    .setting .desc{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+    .toggle{
+      width:54px; height:32px;
+      border-radius:999px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.20);
+      position:relative;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .toggle::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:4px;
+      transform:translateY(-50%);
+      width:24px; height:24px;
+      border-radius:999px;
+      background:#fff;
+      transition: left .15s ease;
+    }
+    .toggle.on{background: rgba(255,255,255,.35);}
+    .toggle.on::after{left:26px;}
+
+    select, button.small{
+      border:none;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:800;
+      background: rgba(255,255,255,.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.18);
+      cursor:pointer;
+    }
+
+    /* Category modal */
+    #catModal{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding:14px;
+      z-index:9998;
+    }
+    #catModal.open{display:flex;}
+    #catSheet{
+      width:min(520px, 100%);
+      max-height:78vh;
+      overflow:auto;
+      background: #0f172a;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 22px;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+      padding:14px;
+    }
+    .sheetTop{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; margin-bottom:10px;
+    }
+    .sheetTop .h{
+      font-weight:950;
+      font-size:16px;
+    }
+    .catControls{display:flex; gap:10px; margin:10px 0;}
+    .catControls button{
+      flex:1;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      font-weight:900;
+      cursor:pointer;
+    }
+    .catItem{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 10px;
+      border-radius:14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      margin-bottom:8px;
+    }
+    .catItem .nm{font-weight:850; font-size:14px;}
+  </style>
+</head>
+<body>
+
+  <div id="intro" aria-hidden="true">
+    <div class="media">
+      <img src="assets/intro.jpg" alt="Estimania intro"
+           onerror="this.style.display='none'; this.parentElement.textContent='(Plaats straks assets/intro.jpg of assets/intro.mp4)';" />
+    </div>
+  </div>
+
+  <div id="page-main" class="page active">
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">Estimania</div>
+        <div class="subtle" id="loadInfo">Vragen laden…</div>
+      </div>
+      <button class="iconbtn" id="to-settings" type="button" aria-label="Instellingen">⚙️</button>
+    </div>
+
+    <div class="card">
+      <div class="qa">
+        <div id="question"></div>
+
+        <div id="countWrap">
+          <div id="countdown"></div>
+          <div class="bar" aria-label="Tijdsbalk"><div id="barFill"></div></div>
+        </div>
+
+        <div id="answer">
+          <div class="label">Antwoord</div>
+          <div class="value" id="answerValue"></div>
+        </div>
+
+        <div class="buttonsRow">
+          <button class="btn" id="btn-ask" type="button">VRAAG</button>
+          <button class="btn secondary" id="btn-reveal" type="button" disabled>ESTIMANIA</button>
+        </div>
+
+        <div class="footerStatus" id="status"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-settings" class="page">
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">Instellingen</div>
+        <div class="subtle">Slaat automatisch op</div>
+      </div>
+      <button class="iconbtn" id="back" type="button" aria-label="Terug">↩️</button>
+    </div>
+
+    <div class="card">
+      <div class="setting">
+        <div class="left">
+          <div class="name">Achtergrondmuziek</div>
+          <div class="desc">Speelt background.mp3 (loop). Standaard uit, volume 20%.</div>
+        </div>
+        <div class="toggle" id="toggle-bgm" role="switch" aria-checked="false"></div>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Stem (vraag oplezen)</div>
+          <div class="desc">Nederlandse stem (nl-NL). Standaard aan.</div>
+        </div>
+        <div class="toggle on" id="toggle-tts" role="switch" aria-checked="true"></div>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Duur antwoordtijd</div>
+          <div class="desc">Kies 15s, 30s of 45s (tune: 15s.mp3 / 30s.mp3 / 45s.mp3).</div>
+        </div>
+        <select id="sel-duration" aria-label="Duur">
+          <option value="15">15s</option>
+          <option value="30">30s</option>
+          <option value="45">45s</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Lastigheid</div>
+          <div class="desc">Filtert vragen op Moeilijkheid (makkelijk/medium/lastig).</div>
+        </div>
+        <select id="sel-difficulty" aria-label="Lastigheid">
+          <option value="makkelijk">makkelijk</option>
+          <option value="medium" selected>medium</option>
+          <option value="lastig">lastig</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Categorieën</div>
+          <div class="desc">Kies welke categorieën meedoen (alfabetisch).</div>
+        </div>
+        <button class="small" id="btn-categories" type="button">Selecteer</button>
+      </div>
+
+      <div class="footerStatus" id="settingsStatus"></div>
+    </div>
+  </div>
+
+  <div id="catModal" aria-hidden="true">
+    <div id="catSheet">
+      <div class="sheetTop">
+        <div class="h">Categorieën</div>
+        <button class="small" id="catClose" type="button">Sluit</button>
+      </div>
+
+      <div class="catControls">
+        <button id="catAll" type="button">Selecteer alles</button>
+        <button id="catNone" type="button">Deselecteer alles</button>
+      </div>
+
+      <div id="catList"></div>
+      <div class="footerStatus" id="catStatus"></div>
+    </div>
+  </div>
+
+  <audio id="bgm" src="background.mp3" loop preload="auto"></audio>
+  <audio id="tune15" src="15s.mp3" preload="auto"></audio>
+  <audio id="tune30" src="30s.mp3" preload="auto"></audio>
+  <audio id="tune45" src="45s.mp3" preload="auto"></audio>
+
+  <script>
+    const DB_FILES = ["VragenDatabase.json", "ActueleVragen.json"];
+
+    const KEY = {
+      bgm: "estimania_bgm_v1",
+      tts: "estimania_tts_v1",
+      duration: "estimania_duration_v1",
+      difficulty: "estimania_difficulty_v1",
+      categories: "estimania_categories_v1"
+    };
+
+    const introEl = document.getElementById("intro");
+    const pageMain = document.getElementById("page-main");
+    const pageSettings = document.getElementById("page-settings");
+
+    const toSettingsBtn = document.getElementById("to-settings");
+    const backBtn = document.getElementById("back");
+
+    const questionEl = document.getElementById("question");
+    const countdownEl = document.getElementById("countdown");
+    const barFill = document.getElementById("barFill");
+    const answerWrap = document.getElementById("answer");
+    const answerValueEl = document.getElementById("answerValue");
+    const statusEl = document.getElementById("status");
+    const loadInfoEl = document.getElementById("loadInfo");
+
+    const askBtn = document.getElementById("btn-ask");
+    const revealBtn = document.getElementById("btn-reveal");
+
+    const toggleBgm = document.getElementById("toggle-bgm");
+    const toggleTts = document.getElementById("toggle-tts");
+    const selDuration = document.getElementById("sel-duration");
+    const selDifficulty = document.getElementById("sel-difficulty");
+    const btnCategories = document.getElementById("btn-categories");
+    const settingsStatus = document.getElementById("settingsStatus");
+
+    const catModal = document.getElementById("catModal");
+    const catList = document.getElementById("catList");
+    const catClose = document.getElementById("catClose");
+    const catAll = document.getElementById("catAll");
+    const catNone = document.getElementById("catNone");
+    const catStatus = document.getElementById("catStatus");
+
+    const bgm = document.getElementById("bgm");
+    const tune15 = document.getElementById("tune15");
+    const tune30 = document.getElementById("tune30");
+    const tune45 = document.getElementById("tune45");
+
+    let allQuestions = [];
+    let pool = [];
+    let usedIdx = 0;
+
+    let current = null;
+    let timer = null;
+    let tLeft = 0;
+    let tTotal = 30;
+
+    let audioUnlocked = false;
+
+    let settings = {
+      bgm: false,
+      tts: true,
+      duration: 30,
+      difficulty: "medium",
+      categories: null // null => all
+    };
+
+    function showPage(which){
+      pageMain.classList.toggle("active", which === "main");
+      pageSettings.classList.toggle("active", which === "settings");
+    }
+
+    function setToggle(el, on){
+      el.classList.toggle("on", !!on);
+      el.setAttribute("aria-checked", on ? "true" : "false");
+    }
+
+    function saveSettings(){
+      localStorage.setItem(KEY.bgm, settings.bgm ? "1" : "0");
+      localStorage.setItem(KEY.tts, settings.tts ? "1" : "0");
+      localStorage.setItem(KEY.duration, String(settings.duration));
+      localStorage.setItem(KEY.difficulty, String(settings.difficulty));
+      localStorage.setItem(KEY.categories, settings.categories ? JSON.stringify([...settings.categories]) : "");
+      settingsStatus.textContent = "Opgeslagen.";
+      setTimeout(() => { if (settingsStatus.textContent === "Opgeslagen.") settingsStatus.textContent = ""; }, 900);
+    }
+
+    function loadSettings(){
+      const bgmV = localStorage.getItem(KEY.bgm);
+      const ttsV = localStorage.getItem(KEY.tts);
+      const durV = localStorage.getItem(KEY.duration);
+      const difV = localStorage.getItem(KEY.difficulty);
+      const catV = localStorage.getItem(KEY.categories);
+
+      settings.bgm = bgmV === "1";
+      settings.tts = (ttsV === null) ? true : (ttsV === "1");
+      settings.duration = durV ? parseInt(durV, 10) : 30;
+      settings.difficulty = difV || "medium";
+
+      if (catV && catV.trim().length > 0){
+        try { settings.categories = new Set(JSON.parse(catV)); }
+        catch { settings.categories = null; }
+      } else {
+        settings.categories = null;
+      }
+    }
+
+    function updateSettingsUI(){
+      setToggle(toggleBgm, settings.bgm);
+      setToggle(toggleTts, settings.tts);
+      selDuration.value = String(settings.duration);
+      selDifficulty.value = String(settings.difficulty);
+
+      bgm.volume = 0.2;
+      if (!settings.bgm) safePause(bgm);
+    }
+
+    function safePause(a){ try { a.pause(); } catch {} }
+    function safeStop(a){ try { a.pause(); a.currentTime = 0; } catch {} }
+    async function safePlay(a){
+      try {
+        const p = a.play();
+        if (p && typeof p.catch === "function") await p;
+      } catch {}
+    }
+
+    function normalizeDifficulty(v){
+      const s = String(v ?? "").toLowerCase().trim();
+      if (!s) return "";
+      if (["makkelijk","easy","eenvoudig","1"].includes(s)) return "makkelijk";
+      if (["medium","gemiddeld","2"].includes(s)) return "medium";
+      if (["lastig","moeilijk","hard","3"].includes(s)) return "lastig";
+      return s;
+    }
+
+    function getCategory(q){
+      return (q.Categorie ?? q.categorie ?? q.Category ?? q.category ?? "Algemeen").toString().trim() || "Algemeen";
+    }
+    function getQuestionText(q){
+      return (q.Vraag ?? q.vraag ?? q.Question ?? q.question ?? "").toString().trim();
+    }
+    function getAnswerText(q){
+      const verwacht = (q.Verwacht ?? q.verwacht);
+      const exact = (q.Exact ?? q.exact);
+      const unit = (q.Unit ?? q.unit ?? "").toString().trim();
+
+      let base = "";
+      if (verwacht !== undefined && verwacht !== null && String(verwacht).trim() !== "") base = String(verwacht);
+      else if (exact !== undefined && exact !== null && String(exact).trim() !== "") base = String(exact);
+      else base = "—";
+
+      return unit ? `${base} ${unit}` : base;
+    }
+
+    function pickDutchNLVoice(){
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const nlNL = voices.find(v => (v.lang || "").toLowerCase() === "nl-nl");
+      if (nlNL) return nlNL;
+
+      const nlNL2 = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl-nl"));
+      if (nlNL2) return nlNL2;
+
+      const nlNotBE = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl") && (v.lang || "").toLowerCase() !== "nl-be");
+      if (nlNotBE) return nlNotBE;
+
+      const anyNL = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl"));
+      return anyNL || null;
+    }
+
+    function speak(text){
+      if (!settings.tts) return;
+      try {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "nl-NL";
+        u.rate = 1.0;
+        u.pitch = 1.0;
+
+        const v = pickDutchNLVoice();
+        if (v) u.voice = v;
+
+        window.speechSynthesis.speak(u);
+      } catch {}
+    }
+
+    function warmupSpeech(){
+      try {
+        if (!("speechSynthesis" in window)) return;
+        const u = new SpeechSynthesisUtterance(" ");
+        u.lang = "nl-NL";
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+      } catch {}
+    }
+
+    async function unlockAudioOnce(){
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+
+      try { bgm.volume = 0.2; await safePlay(bgm); bgm.pause(); bgm.currentTime = 0; } catch {}
+      try { await safePlay(tune15); tune15.pause(); tune15.currentTime = 0; } catch {}
+      try { await safePlay(tune30); tune30.pause(); tune30.currentTime = 0; } catch {}
+      try { await safePlay(tune45); tune45.pause(); tune45.currentTime = 0; } catch {}
+    }
+
+    function fallbackBeep(){
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        const ctx = new AC();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = 880;
+        gain.gain.value = 0.09;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        setTimeout(() => {
+          osc.stop();
+          ctx.close && ctx.close();
+        }, 150);
+      } catch {}
+    }
+    function playEndBeep(){ fallbackBeep(); }
+
+    function getTuneForDuration(){
+      if (settings.duration === 15) return tune15;
+      if (settings.duration === 45) return tune45;
+      return tune30;
+    }
+    async function playTune(){
+      const a = getTuneForDuration();
+      try { a.currentTime = 0; await safePlay(a); } catch {}
+    }
+    function stopTune(){
+      safeStop(tune15); safeStop(tune30); safeStop(tune45);
+    }
+    async function updateBgmPlayback(){
+      bgm.volume = 0.2;
+      if (!settings.bgm) { safePause(bgm); return; }
+      await safePlay(bgm);
+    }
+
+    async function fetchJSON(url){
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Fetch faalde (${res.status}): ${url}`);
+      return await res.json();
+    }
+
+    async function loadQuestions(){
+      const results = await Promise.allSettled(DB_FILES.map(f => fetchJSON(f)));
+      const loaded = [];
+      const loadedFiles = [];
+
+      results.forEach((r, i) => {
+        if (r.status === "fulfilled") {
+          const data = r.value;
+          const arr = Array.isArray(data) ? data : (Array.isArray(data.vragen) ? data.vragen : []);
+          loaded.push(...arr);
+          loadedFiles.push(DB_FILES[i]);
+        }
+      });
+
+      allQuestions = loaded;
+      if (loadedFiles.length === 0){
+        loadInfoEl.textContent = "Geen databestanden gevonden";
+        statusEl.textContent = `Plaats ${DB_FILES.join(" en ")} naast index.html.`;
+      } else {
+        loadInfoEl.textContent = `${loadedFiles.join(" + ")} • ${allQuestions.length} vragen`;
+      }
+
+      buildCategoriesFromData();
+      rebuildPool();
+      updateMainButtons();
+    }
+
+    let allCategories = [];
+
+    function buildCategoriesFromData(){
+      const set = new Set();
+      allQuestions.forEach(q => set.add(getCategory(q)));
+      allCategories = [...set].sort((a,b) => a.localeCompare(b, "nl"));
+    }
+
+    function openCategories(){
+      renderCategoryList();
+      catModal.classList.add("open");
+      catModal.setAttribute("aria-hidden", "false");
+    }
+    function closeCategories(){
+      catModal.classList.remove("open");
+      catModal.setAttribute("aria-hidden", "true");
+    }
+
+    function renderCategoryList(){
+      catList.innerHTML = "";
+      const sel = settings.categories;
+      const effectiveSel = sel ? new Set([...sel].filter(c => allCategories.includes(c))) : null;
+
+      allCategories.forEach(cat => {
+        const row = document.createElement("div");
+        row.className = "catItem";
+
+        const nm = document.createElement("div");
+        nm.className = "nm";
+        nm.textContent = cat;
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = effectiveSel ? effectiveSel.has(cat) : true;
+
+        cb.addEventListener("change", () => {
+          if (!settings.categories) settings.categories = new Set(allCategories);
+          if (cb.checked) settings.categories.add(cat);
+          else settings.categories.delete(cat);
+
+          saveSettings();
+          catStatus.textContent = `${settings.categories.size}/${allCategories.length} geselecteerd`;
+          rebuildPool();
+          updateMainButtons();
+        });
+
+        row.appendChild(nm);
+        row.appendChild(cb);
+        catList.appendChild(row);
+      });
+
+      catStatus.textContent = settings.categories
+        ? `${settings.categories.size}/${allCategories.length} geselecteerd`
+        : `Alle categorieën geselecteerd (${allCategories.length})`;
+    }
+
+    function selectAllCategories(){
+      settings.categories = null;
+      saveSettings();
+      renderCategoryList();
+      rebuildPool();
+      updateMainButtons();
+    }
+    function deselectAllCategories(){
+      settings.categories = new Set();
+      saveSettings();
+      renderCategoryList();
+      rebuildPool();
+      updateMainButtons();
+    }
+
+    function rebuildPool(){
+      const wantDiff = normalizeDifficulty(settings.difficulty);
+      const catSet = settings.categories;
+
+      const filtered = allQuestions.filter(q => {
+        const qt = getQuestionText(q);
+        if (!qt) return false;
+
+        const qdiff = normalizeDifficulty(q.Moeilijkheid ?? q.moeilijkheid ?? q.Difficulty ?? q.difficulty);
+        if (wantDiff && qdiff && qdiff !== wantDiff) return false;
+        if (wantDiff && !qdiff) { if (wantDiff !== "medium") return false; }
+
+        if (catSet && !catSet.has(getCategory(q))) return false;
+        return true;
+      });
+
+      for (let i = filtered.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+      }
+
+      pool = filtered;
+      usedIdx = 0;
+
+      statusEl.textContent = pool.length > 0
+        ? `Klaar • ${pool.length} vragen (lastigheid: ${settings.difficulty})`
+        : `Geen vragen voor huidige filters (lastigheid/categorieën).`;
+
+      if (pool.length === 0) {
+        current = null;
+        resetQA();
+      }
+    }
+
+    function updateMainButtons(){
+      const canAsk = pool.length > 0;
+      askBtn.disabled = !canAsk;
+      revealBtn.disabled = true;
+    }
+
+    function resetQA(){
+      stopTimer();
+      stopTune();
+      questionEl.textContent = "";
+      countdownEl.textContent = "";
+      barFill.style.width = "0%";
+      answerWrap.style.visibility = "hidden";
+      answerValueEl.textContent = "";
+      revealBtn.disabled = true;
+    }
+
+    function stopTimer(){
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    function setProgress(remaining, total){
+      const pct = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
+      barFill.style.width = `${pct * 100}%`;
+    }
+
+    function pickNextQuestion(){
+      if (pool.length === 0) return null;
+      if (usedIdx >= pool.length) {
+        rebuildPool();
+        if (pool.length === 0) return null;
+      }
+      return pool[usedIdx++];
+    }
+
+    async function startQuestion(){
+      resetQA();
+      current = pickNextQuestion();
+      if (!current) return;
+
+      tTotal = settings.duration;
+      tLeft = tTotal;
+
+      questionEl.textContent = getQuestionText(current);
+      countdownEl.textContent = String(tLeft);
+      setProgress(tLeft, tTotal);
+
+      answerWrap.style.visibility = "hidden";
+      answerValueEl.textContent = "";
+      revealBtn.disabled = false;
+
+      speak(getQuestionText(current));
+      stopTune();
+      await playTune();
+
+      await updateBgmPlayback();
+
+      timer = setInterval(() => {
+        tLeft -= 1;
+        if (tLeft > 0) {
+          countdownEl.textContent = String(tLeft);
+          setProgress(tLeft, tTotal);
+        } else {
+          stopTimer();
+          stopTune();
+          countdownEl.textContent = "0";
+          setProgress(0, tTotal);
+          playEndBeep();
+          revealAnswer(false);
+        }
+      }, 1000);
+    }
+
+    function revealAnswer(userPressed=true){
+      if (!current) return;
+      stopTimer();
+      stopTune();
+      countdownEl.textContent = "";
+      barFill.style.width = "0%";
+
+      answerValueEl.textContent = getAnswerText(current);
+      answerWrap.style.visibility = "visible";
+      revealBtn.disabled = true;
+    }
+
+    toSettingsBtn.addEventListener("click", () => {
+      showPage("settings");
+      updateSettingsUI();
+      settingsStatus.textContent = "";
+    });
+
+    backBtn.addEventListener("click", () => {
+      showPage("main");
+    });
+
+    askBtn.addEventListener("click", async () => {
+      await unlockAudioOnce();
+      warmupSpeech();
+      await updateBgmPlayback();
+      await startQuestion();
+    });
+
+    revealBtn.addEventListener("click", async () => {
+      await unlockAudioOnce();
+      await updateBgmPlayback();
+      revealAnswer(true);
+    });
+
+    toggleBgm.addEventListener("click", async () => {
+      settings.bgm = !settings.bgm;
+      setToggle(toggleBgm, settings.bgm);
+      saveSettings();
+      await unlockAudioOnce();
+      await updateBgmPlayback();
+    });
+
+    toggleTts.addEventListener("click", () => {
+      settings.tts = !settings.tts;
+      setToggle(toggleTts, settings.tts);
+      saveSettings();
+    });
+
+    selDuration.addEventListener("change", () => {
+      settings.duration = parseInt(selDuration.value, 10);
+      saveSettings();
+      stopTimer();
+      stopTune();
+      countdownEl.textContent = "";
+      barFill.style.width = "0%";
+    });
+
+    selDifficulty.addEventListener("change", () => {
+      settings.difficulty = selDifficulty.value;
+      saveSettings();
+      rebuildPool();
+      updateMainButtons();
+    });
+
+    btnCategories.addEventListener("click", () => openCategories());
+
+    catClose.addEventListener("click", () => closeCategories());
+    catModal.addEventListener("click", (e) => { if (e.target === catModal) closeCategories(); });
+
+    catAll.addEventListener("click", () => selectAllCategories());
+    catNone.addEventListener("click", () => deselectAllCategories());
+
+    async function boot(){
+      setTimeout(() => {
+        introEl.style.display = "none";
+        introEl.setAttribute("aria-hidden","true");
+      }, 2000);
+
+      loadSettings();
+      updateSettingsUI();
+      bgm.volume = 0.2;
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = () => {};
+      }
+
+      await loadQuestions();
+    }
+
+    boot();
+  </script>
+</body>
+</html>

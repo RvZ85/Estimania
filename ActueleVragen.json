@@ -1,0 +1,20 @@
+[
+  {
+    "id": "Q0001",
+    "categorie": "#RvZ",
+    "vraag": "Hoe lang ben ik?",
+    "exact": 42195.0,
+    "unit": "duizend meter",
+    "verwacht": 42.2,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0002",
+    "categorie": "#RvZ",
+    "vraag": "Hoe zwaar ben ik?",
+    "exact": 21097.5,
+    "unit": "duizend meter",
+    "verwacht": 21.1,
+    "Moeilijkheid": 3
+  }
+]
