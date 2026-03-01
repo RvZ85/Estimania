@@ -1,243 +1,1159 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estimania</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estimania</title>
+  <style>
+    :root{
+      --primary:#244E8F;
+      --bg:#F7FBFF;
+      --text:#0f172a;
+      --muted:#5b6b84;
+      --warn:#F5A623;
+      --danger:#D64545;
+      --radius:16px;
+      --shadow:0 10px 28px rgba(36,78,143,.12);
+      --border:rgba(36,78,143,.18);
 
-<style>
-:root{
-  --primary:#244E8F;
-  --bg:#F7FBFF;
-  --warn:#F5A623;
-  --danger:#D64545;
-}
+      /* Card layout tuning */
+      --cardPadTop: 23%;     /* moved DOWN (was ~20%) */
+      --cardPadSides: 13%;
+      --cardPadBottom: 14%;
+      --ribbonTop: 3.5%;
+    }
 
-*{box-sizing:border-box;}
-html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:#0f172a;}
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x:hidden;
+    }
 
-.page{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:16px;gap:14px;}
+    /* Pages */
+    .page{
+      display:none;
+      max-width:520px;
+      margin:0 auto;
+      min-height:100vh;
+      padding:14px 14px 18px;
+      gap:12px;
+      flex-direction:column;
+    }
+    .page.active{display:flex;}
 
-.topbar{display:flex;justify-content:space-between;align-items:center;}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding-top:6px;
+    }
+    .brand .title{
+      font-weight:900;
+      letter-spacing:.2px;
+      font-size:18px;
+      line-height:1.1;
+      color:var(--primary);
+    }
+    .brand .subtle{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
 
-button{border-radius:14px;padding:14px;font-weight:900;cursor:pointer;}
-.primary{background:var(--primary);color:#fff;border:none;}
-.outline{background:transparent;color:var(--primary);border:2px solid var(--primary);}
+    .iconbtn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.78);
+      color: var(--primary);
+      width:44px; height:44px;
+      border-radius:14px;
+      box-shadow: var(--shadow);
+      font-size:20px;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .iconbtn:active{transform: translateY(1px);}
 
-.sticky{margin-top:auto;display:flex;gap:10px;position:sticky;bottom:10px;}
+    /* Intro */
+    #intro{
+      position:fixed;
+      inset:0;
+      background: var(--bg);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      transition: opacity .8s ease;
+    }
+    #intro.fade{opacity:0; pointer-events:none;}
+    #intro img{
+      width:100%;
+      height:100%;
+      object-fit:contain; /* show full intro */
+      object-position:center;
+    }
 
-.timerRow{display:flex;align-items:center;gap:12px;}
-#countdown{font-size:56px;font-weight:900;color:var(--primary);min-width:90px;}
-.bar{flex:1;height:14px;background:rgba(36,78,143,.15);border-radius:999px;overflow:hidden;}
-.bar div{height:100%;width:0%;background:var(--primary);transition:width .2s linear;}
+    /* Main: Card */
+    .mainStack{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      flex:1;
+      min-height:0;
+    }
 
-.gameCard{
-  position:relative;
-  width:100%;
-  height:min(62vh,560px);
-  background-repeat:no-repeat;
-  background-position:center;
-  background-size:contain;
-  display:flex;
-  flex-direction:column;
-  padding:56px 44px 46px;
-}
+    .cardWrap{
+      position:relative;
+      width:100%;
+      max-width:520px;
+      margin: 6px auto 0;
+      height: min(62vh, 560px);
+    }
 
-@media (orientation:portrait){
-  .gameCard{
-    background-image:url("assets/card_bg_staand.png");
-  }
-  #question{font-size:22px;}
-  #answerValue{font-size:24px;}
-}
+    /* show correct card BG by orientation */
+    .cardBG{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      object-position:center;
+      filter: drop-shadow(0 14px 34px rgba(36,78,143,.18));
+      user-select:none;
+      pointer-events:none;
+    }
+    .cardBG.landscape{display:none;}
+    @media (orientation:landscape){
+      .cardWrap{ height: min(60vh, 420px); }
+      .cardBG.portrait{display:none;}
+      .cardBG.landscape{display:block;}
+      :root{ --ribbonTop: 2.8%; }
+    }
 
-@media (orientation:landscape){
-  .gameCard{
-    background-image:url("assets/card_bg_liggend.png");
-    height:min(60vh,420px);
-    padding:40px 52px;
-  }
-  .ribbon{width:50%;}
-}
+    .ribbon{
+      position:absolute;
+      top: var(--ribbonTop);
+      left:50%;
+      transform: translateX(-50%);
+      width: min(78%, 380px);
+      user-select:none;
+      pointer-events:none;
+    }
+    @media (orientation:landscape){
+      .ribbon{ width: min(48%, 280px); } /* smaller on landscape */
+    }
 
-.ribbon{
-  position:absolute;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%);
-  width:70%;
-  max-width:360px;
-}
+    /* content area aligned to inside of PNG */
+    .cardContent{
+      position:absolute;
+      inset:0;
+      padding: var(--cardPadTop) var(--cardPadSides) var(--cardPadBottom);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      overflow:hidden;
+    }
 
-.pill{
-  font-size:12px;
-  font-weight:900;
-  color:var(--primary);
-  margin-top:40px;
-}
+    .pillMeta{
+      align-self:flex-start;
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(36,78,143,.22);
+      background: rgba(247,251,255,.85);
+      color: var(--primary);
+      font-weight:900;
+      font-size:12px;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      margin-top: 10px; /* extra "two lines lower" feel */
+    }
 
-#question{font-weight:800;}
-#answerValue{font-weight:900;margin-top:14px;}
+    .label{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      color:var(--muted);
+      font-weight:800;
+    }
 
-#intro{
-  position:fixed;
-  inset:0;
-  background:#F7FBFF;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  transition:opacity .8s ease;
-}
+    .qText{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.22;
+      color:var(--text);
+      max-height: 5.2em; /* ~4 lines */
+      overflow:auto;
+      padding-right:6px;
+    }
+    .aText{
+      font-size:24px;
+      font-weight:950;
+      line-height:1.18;
+      color:var(--text);
+      max-height: 4.2em;
+      overflow:auto;
+      padding-right:6px;
+    }
+    @media (max-width:420px) and (orientation:portrait){
+      .qText{font-size:24px;}
+      .aText{font-size:26px;}
+    }
 
-#intro img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-}
+    /* Timer */
+    .timerRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:6px 2px;
+    }
+    #countdown{
+      font-size:56px;
+      font-weight:950;
+      line-height:1;
+      color:var(--primary);
+      width:110px;
+      text-align:left;
+    }
+    .bar{
+      flex:1;
+      height:14px;
+      background: rgba(36,78,143,.10);
+      border-radius:999px;
+      overflow:hidden;
+      border: 1px solid rgba(36,78,143,.18);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: rgba(36,78,143,.95);
+      border-radius:999px;
+      transition: width .18s linear;
+    }
 
-.fade-out{opacity:0;pointer-events:none;}
-</style>
+    /* Sticky actions */
+    .stickyActions{
+      position:sticky;
+      bottom:10px;
+      display:flex;
+      gap:10px;
+      margin-top:auto;
+      padding-top:6px;
+    }
+    .btn{
+      flex:1;
+      border-radius: 14px;
+      padding:14px 14px;
+      font-size:16px;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow: var(--shadow);
+      border:1px solid transparent;
+    }
+    .btn.primary{
+      background: var(--primary);
+      color:#fff;
+    }
+    .btn.primary:active{transform: translateY(1px);}
+    .btn.outline{
+      background: transparent;
+      color: var(--primary);
+      border-color: var(--primary);
+      box-shadow:none;
+    }
+    .btn:disabled{opacity:.55; cursor:not-allowed;}
+
+    .footerStatus{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      margin-top:2px;
+    }
+
+    /* Settings page */
+    .card{
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(36,78,143,.14);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .setting{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.90);
+      border: 1px solid rgba(36,78,143,.14);
+      margin-bottom:12px;
+    }
+    .setting .left{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .setting .name{
+      font-weight:900;
+      font-size:14px;
+      color:var(--text);
+    }
+    .setting .desc{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.2;
+    }
+    .toggle{
+      width:54px; height:32px;
+      border-radius:999px;
+      background: rgba(36,78,143,.14);
+      border: 1px solid rgba(36,78,143,.18);
+      position:relative;
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .toggle::after{
+      content:"";
+      position:absolute;
+      top:50%;
+      left:4px;
+      transform:translateY(-50%);
+      width:24px; height:24px;
+      border-radius:999px;
+      background:#fff;
+      box-shadow: 0 6px 16px rgba(36,78,143,.18);
+      transition: left .15s ease;
+    }
+    .toggle.on{background: rgba(36,78,143,.35);}
+    .toggle.on::after{left:26px;}
+
+    select, button.small{
+      border:1px solid rgba(36,78,143,.22);
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      background: rgba(255,255,255,.88);
+      color: var(--primary);
+      cursor:pointer;
+    }
+
+    /* Category modal */
+    #catModal{
+      position:fixed; inset:0;
+      background: rgba(15,23,42,.38);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding:14px;
+      z-index:9998;
+    }
+    #catModal.open{display:flex;}
+    #catSheet{
+      width:min(520px, 100%);
+      max-height:78vh;
+      overflow:auto;
+      background: rgba(255,255,255,.96);
+      border: 1px solid rgba(36,78,143,.18);
+      border-radius: 22px;
+      box-shadow: 0 24px 80px rgba(36,78,143,.22);
+      padding:14px;
+    }
+    .sheetTop{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; margin-bottom:10px;
+    }
+    .sheetTop .h{
+      font-weight:950;
+      font-size:16px;
+      color:var(--primary);
+    }
+    .catControls{display:flex; gap:10px; margin:10px 0;}
+    .catControls button{
+      flex:1;
+      padding:10px 10px;
+      border-radius:14px;
+      border:1px solid rgba(36,78,143,.28);
+      background: rgba(255,255,255,.92);
+      color: var(--primary);
+      font-weight:950;
+      cursor:pointer;
+    }
+    .catItem{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 10px;
+      border-radius:14px;
+      background: rgba(36,78,143,.06);
+      border: 1px solid rgba(36,78,143,.12);
+      margin-bottom:8px;
+    }
+    .catItem .nm{font-weight:900; font-size:14px; color:var(--text);}
+  </style>
 </head>
-
 <body>
 
-<div id="intro">
-  <img src="assets/intro.jpg" alt="Intro">
-</div>
+  <!-- Intro -->
+  <div id="intro" aria-hidden="true">
+    <img src="assets/intro.jpg" alt="Estimania intro" />
+  </div>
 
-<div class="page">
+  <!-- PAGE: Main -->
+  <div id="page-main" class="page active">
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">Estimania</div>
+        <div class="subtle" id="loadInfo">Vragen laden…</div>
+      </div>
+      <button class="iconbtn" id="to-settings" type="button" aria-label="Instellingen">⚙️</button>
+    </div>
 
-<div class="topbar">
-  <div><strong>Estimania</strong></div>
-</div>
+    <div class="mainStack">
+      <div class="cardWrap" aria-label="Speelkaart">
+        <img class="cardBG portrait" src="assets/card_bg_staand.png" alt="" />
+        <img class="cardBG landscape" src="assets/card_bg_liggend.png" alt="" />
+        <img class="ribbon" src="assets/ribbon.png" alt="Estimania" />
 
-<div class="gameCard">
-  <img src="assets/ribbon.png" class="ribbon">
-  <div class="pill" id="category">Categorie: —</div>
-  <div id="question"></div>
-  <div id="answerValue"></div>
-</div>
+        <div class="cardContent">
+          <div class="pillMeta" id="categoryPill">Categorie: —</div>
 
-<div class="timerRow">
-  <div id="countdown"></div>
-  <div class="bar"><div id="barFill"></div></div>
-</div>
+          <div class="label">Vraag</div>
+          <div id="question" class="qText"></div>
 
-<div class="sticky">
-  <button class="primary" id="askBtn">VRAAG</button>
-  <button class="outline" id="revealBtn">ESTIMANIA</button>
-</div>
+          <div style="height:10px;"></div>
 
-</div>
+          <div class="label">Antwoord</div>
+          <div id="answerValue" class="aText"></div>
+        </div>
+      </div>
 
-<script>
-const askBtn = document.getElementById("askBtn");
-const revealBtn = document.getElementById("revealBtn");
-const questionEl = document.getElementById("question");
-const answerEl = document.getElementById("answerValue");
-const countdownEl = document.getElementById("countdown");
-const barFill = document.getElementById("barFill");
-const categoryEl = document.getElementById("category");
+      <div class="timerRow">
+        <div id="countdown"></div>
+        <div class="bar" aria-label="Tijdsbalk"><div id="barFill"></div></div>
+      </div>
 
-let questions = [];
-let timer = null;
-let duration = 15;
-let audioCtx = null;
+      <div class="stickyActions">
+        <button class="btn primary" id="btn-ask" type="button">VRAAG</button>
+        <button class="btn outline" id="btn-reveal" type="button" disabled>ESTIMANIA</button>
+      </div>
 
-function initAudio(){
-  if(!audioCtx){
-    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-  }
-}
+      <div class="footerStatus" id="status"></div>
+    </div>
+  </div>
 
-function tone(freq=800, ms=120){
-  if(!audioCtx) return;
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  osc.frequency.value = freq;
-  gain.gain.value = 0.1;
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-  osc.start();
-  setTimeout(()=>{osc.stop();},ms);
-}
+  <!-- PAGE: Settings -->
+  <div id="page-settings" class="page">
+    <div class="topbar">
+      <div class="brand">
+        <div class="title">Instellingen</div>
+        <div class="subtle">Slaat automatisch op</div>
+      </div>
+      <button class="iconbtn" id="back" type="button" aria-label="Terug">↩️</button>
+    </div>
 
-function speak(text){
-  if(!("speechSynthesis" in window)) return;
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = "nl-NL";
-  utter.volume = 1;
-  window.speechSynthesis.speak(utter);
-}
+    <div class="card">
+      <div class="setting">
+        <div class="left">
+          <div class="name">Achtergrondmuziek</div>
+          <div class="desc">Speelt assets/background.mp3 (loop). Standaard uit, volume 20%.</div>
+        </div>
+        <div class="toggle" id="toggle-bgm" role="switch" aria-checked="false"></div>
+      </div>
 
-function loadData(){
-  fetch("VragenDatabase.json")
-  .then(r=>r.json())
-  .then(d=>{questions=d;})
-  .catch(()=>{
-    questions=[{
-      Vraag:"Is dit een test vraag?",
-      Verwacht:"Ja dit is een testvraag.",
-      Categorie:"Test"
-    }];
-  });
-}
+      <div class="setting">
+        <div class="left">
+          <div class="name">Stem (vraag oplezen)</div>
+          <div class="desc">Nederlandse stem (nl-NL). Standaard aan.</div>
+        </div>
+        <div class="toggle on" id="toggle-tts" role="switch" aria-checked="true"></div>
+      </div>
 
-function startQuestion(){
-  initAudio();
-  if(questions.length===0){
-    questions=[{
-      Vraag:"Is dit een test vraag?",
-      Verwacht:"Ja dit is een testvraag.",
-      Categorie:"Test"
-    }];
-  }
-  const q = questions[Math.floor(Math.random()*questions.length)];
-  questionEl.textContent=q.Vraag;
-  answerEl.textContent="";
-  categoryEl.textContent="Categorie: "+(q.Categorie||"Algemeen");
-  speak(q.Vraag);
-  runTimer(q);
-}
+      <div class="setting">
+        <div class="left">
+          <div class="name">Geluid effecten</div>
+          <div class="desc">Countdown piepjes + zoemer. Standaard aan.</div>
+        </div>
+        <div class="toggle on" id="toggle-sfx" role="switch" aria-checked="true"></div>
+      </div>
 
-function runTimer(q){
-  clearInterval(timer);
-  let t=duration;
-  countdownEl.textContent=t;
-  barFill.style.width="100%";
-  timer=setInterval(()=>{
-    t--;
-    if(t<=3 && t>0) tone(900,80);
-    if(t<=0){
-      clearInterval(timer);
-      tone(200,300);
-      revealAnswer(q);
+      <div class="setting">
+        <div class="left">
+          <div class="name">Duur antwoordtijd</div>
+          <div class="desc">15s, 30s of 45s.</div>
+        </div>
+        <select id="sel-duration" aria-label="Duur">
+          <option value="15">15s</option>
+          <option value="30">30s</option>
+          <option value="45">45s</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Lastigheid</div>
+          <div class="desc">Filtert vragen op Moeilijkheid (makkelijk/medium/lastig).</div>
+        </div>
+        <select id="sel-difficulty" aria-label="Lastigheid">
+          <option value="makkelijk">makkelijk</option>
+          <option value="medium" selected>medium</option>
+          <option value="lastig">lastig</option>
+        </select>
+      </div>
+
+      <div class="setting">
+        <div class="left">
+          <div class="name">Categorieën</div>
+          <div class="desc">Selecteer categorieën (alfabetisch).</div>
+        </div>
+        <button class="small" id="btn-categories" type="button">Selecteer</button>
+      </div>
+
+      <div class="footerStatus" id="settingsStatus"></div>
+    </div>
+  </div>
+
+  <!-- Category modal -->
+  <div id="catModal" aria-hidden="true">
+    <div id="catSheet">
+      <div class="sheetTop">
+        <div class="h">Categorieën</div>
+        <button class="small" id="catClose" type="button">Sluit</button>
+      </div>
+
+      <div class="catControls">
+        <button id="catAll" type="button">Selecteer alles</button>
+        <button id="catNone" type="button">Deselecteer alles</button>
+      </div>
+
+      <div id="catList"></div>
+      <div class="footerStatus" id="catStatus"></div>
+    </div>
+  </div>
+
+  <!-- Audio (optional files; beep/buzz uses WebAudio anyway) -->
+  <audio id="bgm" src="assets/background.mp3" loop preload="auto"></audio>
+  <audio id="tune15" src="assets/15s.mp3" preload="auto"></audio>
+  <audio id="tune30" src="assets/30s.mp3" preload="auto"></audio>
+  <audio id="tune45" src="assets/45s.mp3" preload="auto"></audio>
+
+  <script>
+    // Data files in same folder as HTML
+    const DB_FILES = ["VragenDatabase.json", "ActueleVragen.json"];
+
+    const KEY = {
+      bgm: "estimania_bgm_v2",
+      tts: "estimania_tts_v2",
+      duration: "estimania_duration_v2",
+      difficulty: "estimania_difficulty_v2",
+      categories: "estimania_categories_v2",
+      sfx: "estimania_sfx_v2"
+    };
+
+    // DOM
+    const introEl = document.getElementById("intro");
+
+    const pageMain = document.getElementById("page-main");
+    const pageSettings = document.getElementById("page-settings");
+
+    const toSettingsBtn = document.getElementById("to-settings");
+    const backBtn = document.getElementById("back");
+
+    const questionEl = document.getElementById("question");
+    const answerValueEl = document.getElementById("answerValue");
+    const categoryPill = document.getElementById("categoryPill");
+
+    const countdownEl = document.getElementById("countdown");
+    const barFill = document.getElementById("barFill");
+
+    const statusEl = document.getElementById("status");
+    const loadInfoEl = document.getElementById("loadInfo");
+
+    const askBtn = document.getElementById("btn-ask");
+    const revealBtn = document.getElementById("btn-reveal");
+
+    const toggleBgm = document.getElementById("toggle-bgm");
+    const toggleTts = document.getElementById("toggle-tts");
+    const toggleSfx = document.getElementById("toggle-sfx");
+    const selDuration = document.getElementById("sel-duration");
+    const selDifficulty = document.getElementById("sel-difficulty");
+    const btnCategories = document.getElementById("btn-categories");
+    const settingsStatus = document.getElementById("settingsStatus");
+
+    const catModal = document.getElementById("catModal");
+    const catList = document.getElementById("catList");
+    const catClose = document.getElementById("catClose");
+    const catAll = document.getElementById("catAll");
+    const catNone = document.getElementById("catNone");
+    const catStatus = document.getElementById("catStatus");
+
+    const bgm = document.getElementById("bgm");
+
+    const tune15 = document.getElementById("tune15");
+    const tune30 = document.getElementById("tune30");
+    const tune45 = document.getElementById("tune45");
+
+    // State
+    let allQuestions = [];
+    let pool = [];
+    let usedIdx = 0;
+
+    let current = null;
+    let timer = null;
+    let tLeft = 0;
+    let tTotal = 30;
+
+    let audioUnlocked = false;
+    let audioCtx = null;
+
+    let settings = {
+      bgm: false,
+      tts: true,
+      sfx: true,
+      duration: 30,
+      difficulty: "medium",
+      categories: null // null => all
+    };
+
+    // ===== UI routing
+    function showPage(which){
+      pageMain.classList.toggle("active", which === "main");
+      pageSettings.classList.toggle("active", which === "settings");
     }
-    countdownEl.textContent=t>0?t:"0";
-    barFill.style.width=(t/duration*100)+"%";
-  },1000);
-}
 
-function revealAnswer(q){
-  answerEl.textContent=q.Verstacht||q.Verwacht||"";
-}
+    // ===== Settings storage
+    function setToggle(el, on){
+      el.classList.toggle("on", !!on);
+      el.setAttribute("aria-checked", on ? "true" : "false");
+    }
 
-askBtn.onclick=startQuestion;
-revealBtn.onclick=()=>{
-  if(questionEl.textContent){
-    revealAnswer({Verwacht:answerEl.textContent});
-  }
-};
+    function saveSettings(){
+      localStorage.setItem(KEY.bgm, settings.bgm ? "1" : "0");
+      localStorage.setItem(KEY.tts, settings.tts ? "1" : "0");
+      localStorage.setItem(KEY.sfx, settings.sfx ? "1" : "0");
+      localStorage.setItem(KEY.duration, String(settings.duration));
+      localStorage.setItem(KEY.difficulty, String(settings.difficulty));
+      localStorage.setItem(KEY.categories, settings.categories ? JSON.stringify([...settings.categories]) : "");
+      settingsStatus.textContent = "Opgeslagen.";
+      setTimeout(() => { if (settingsStatus.textContent === "Opgeslagen.") settingsStatus.textContent = ""; }, 900);
+    }
 
-window.addEventListener("load",()=>{
-  setTimeout(()=>{
-    document.getElementById("intro").classList.add("fade-out");
-  },3000);
-});
+    function loadSettings(){
+      const bgmV = localStorage.getItem(KEY.bgm);
+      const ttsV = localStorage.getItem(KEY.tts);
+      const sfxV = localStorage.getItem(KEY.sfx);
+      const durV = localStorage.getItem(KEY.duration);
+      const difV = localStorage.getItem(KEY.difficulty);
+      const catV = localStorage.getItem(KEY.categories);
 
-loadData();
-</script>
+      settings.bgm = bgmV === "1";
+      settings.tts = (ttsV === null) ? true : (ttsV === "1");
+      settings.sfx = (sfxV === null) ? true : (sfxV === "1");
+      settings.duration = durV ? parseInt(durV, 10) : 30;
+      settings.difficulty = difV || "medium";
 
+      if (catV && catV.trim().length > 0){
+        try { settings.categories = new Set(JSON.parse(catV)); }
+        catch { settings.categories = null; }
+      } else {
+        settings.categories = null;
+      }
+    }
+
+    function updateSettingsUI(){
+      setToggle(toggleBgm, settings.bgm);
+      setToggle(toggleTts, settings.tts);
+      setToggle(toggleSfx, settings.sfx);
+      selDuration.value = String(settings.duration);
+      selDifficulty.value = String(settings.difficulty);
+
+      bgm.volume = 0.2;
+      // Countdown tunes volume
+      try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; } catch {}
+      if (!settings.bgm) { try { bgm.pause(); } catch {} }
+    }
+
+    // ===== Data normalization
+    function normalizeDifficulty(v){
+      const s = String(v ?? "").toLowerCase().trim();
+      if (!s) return "";
+      if (["makkelijk","easy","eenvoudig","1"].includes(s)) return "makkelijk";
+      if (["medium","gemiddeld","2"].includes(s)) return "medium";
+      if (["lastig","moeilijk","hard","3"].includes(s)) return "lastig";
+      return s;
+    }
+
+    function getCategory(q){
+      return (q.Categorie ?? q.categorie ?? q.Category ?? q.category ?? "Algemeen").toString().trim() || "Algemeen";
+    }
+    function getQuestionText(q){
+      return (q.Vraag ?? q.vraag ?? q.Question ?? q.question ?? "").toString().trim();
+    }
+    function getAnswerText(q){
+      const verwacht = (q.Verwacht ?? q.verwacht);
+      const exact = (q.Exact ?? q.exact);
+      const unit = (q.Unit ?? q.unit ?? "").toString().trim();
+
+      let base = "";
+      if (verwacht !== undefined && verwacht !== null && String(verwacht).trim() !== "") base = String(verwacht);
+      else if (exact !== undefined && exact !== null && String(exact).trim() !== "") base = String(exact);
+      else base = "—";
+
+      return unit ? `${base} ${unit}` : base;
+    }
+
+    // ===== Audio (WebAudio ticks + TTS)
+    function ensureAudioContext(){
+      if (!audioCtx){
+        const AC = window.AudioContext || window.webkitAudioContext;
+        audioCtx = AC ? new AC() : null;
+      }
+    }
+    function tone(freq=880, ms=90, vol=0.08){
+      if (!settings.sfx) return;
+      try {
+        ensureAudioContext();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.value = vol;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        setTimeout(() => osc.stop(), ms);
+      } catch {}
+    }
+    function tick(){ tone(880, 70, 0.07); }
+    function buzz(){ tone(220, 260, 0.10); }
+
+    function pickDutchNLVoice(){
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      const nlNL = voices.find(v => (v.lang || "").toLowerCase() === "nl-nl");
+      if (nlNL) return nlNL;
+      const nlNotBE = voices.find(v => (v.lang || "").toLowerCase().startsWith("nl") && (v.lang || "").toLowerCase() !== "nl-be");
+      return nlNotBE || voices.find(v => (v.lang || "").toLowerCase().startsWith("nl")) || null;
+    }
+
+    function speak(text){
+      if (!settings.tts) return;
+      try{
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = "nl-NL";
+        u.rate = 1.0;
+        u.pitch = 1.0;
+        u.volume = 1.0;
+        const v = pickDutchNLVoice();
+        if (v) u.voice = v;
+        window.speechSynthesis.speak(u);
+      } catch {}
+    }
+
+    function warmupSpeech(){
+      try{
+        if (!("speechSynthesis" in window)) return;
+        const u = new SpeechSynthesisUtterance(" ");
+        u.lang = "nl-NL";
+        u.volume = 0;
+        window.speechSynthesis.speak(u);
+      } catch {}
+    }
+
+    async function unlockAudioOnce(){
+      if (audioUnlocked) return;
+      audioUnlocked = true;
+
+      // unlock HTML audio (bgm + tunes) best effort
+      try {
+        bgm.volume = 0.2;
+      // Countdown tunes volume
+      try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; } catch {}
+        const p = bgm.play();
+        if (p && p.catch) await p.catch(() => {});
+        bgm.pause();
+        bgm.currentTime = 0;
+      } catch {}
+
+      // unlock tunes (volume 0, short play/pause)
+      try {
+        [tune15, tune30, tune45].forEach(a => { if (a) a.volume = 0; });
+        for (const a of [tune15, tune30, tune45]) {
+          if (!a) continue;
+          const p = a.play();
+          if (p && p.catch) await p.catch(() => {});
+          a.pause();
+          a.currentTime = 0;
+        }
+        [tune15, tune30, tune45].forEach(a => { if (a) a.volume = 0.6; });
+      } catch {}
+
+      // unlock WebAudio
+      try { ensureAudioContext(); if (audioCtx && audioCtx.state === "suspended") await audioCtx.resume(); } catch {}
+    }
+
+    async function updateBgmPlayback(){
+      bgm.volume = 0.2;
+      // Countdown tunes volume
+      try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; } catch {}
+      if (!settings.bgm) { try { bgm.pause(); } catch {} return; }
+      try {
+        const p = bgm.play();
+        if (p && p.catch) await p.catch(() => {});
+      } catch {}
+    }
+
+
+    function stopTunes(){
+      try {
+        [tune15, tune30, tune45].forEach(a => {
+          if (!a) return;
+          a.pause();
+          a.currentTime = 0;
+        });
+      } catch {}
+    }
+
+    function getTune(){
+      if (settings.duration === 15) return tune15;
+      if (settings.duration === 45) return tune45;
+      return tune30; // default 30s
+    }
+
+    async function playTune(){
+      if (!settings.sfx) return;
+      const a = getTune();
+      if (!a) return;
+      try{
+        a.currentTime = 0;
+        const p = a.play();
+        if (p && p.catch) await p.catch(() => {});
+      } catch {}
+    }
+
+    // ===== Timer + gameplay
+    function stopTimer(){
+      if (timer){ clearInterval(timer); timer = null; }
+    }
+    function setProgress(remaining, total){
+      const pct = total > 0 ? Math.max(0, Math.min(1, remaining / total)) : 0;
+      barFill.style.width = `${pct * 100}%`;
+    }
+
+    function resetQA(){
+      stopTimer();
+      stopTunes();
+      questionEl.textContent = "";
+      answerValueEl.textContent = "";
+      categoryPill.textContent = "Categorie: —";
+      countdownEl.textContent = "";
+      barFill.style.width = "0%";
+      revealBtn.disabled = true;
+      current = null;
+    }
+
+    function pickNextQuestion(){
+      if (pool.length === 0) return null;
+      if (usedIdx >= pool.length){
+        usedIdx = 0;
+        // reshuffle
+        for (let i = pool.length - 1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+      }
+      return pool[usedIdx++];
+    }
+
+    function revealAnswer(){
+      if (!current) return;
+      stopTimer();
+      stopTunes();
+      countdownEl.textContent = "";
+      barFill.style.width = "0%";
+      answerValueEl.textContent = getAnswerText(current);
+      revealBtn.disabled = true;
+    }
+
+    async function startQuestion(){
+      resetQA();
+      current = pickNextQuestion();
+      if (!current){
+        statusEl.textContent = "Geen vragen beschikbaar.";
+        return;
+      }
+
+      // Fill card
+      const cat = getCategory(current);
+      categoryPill.textContent = `Categorie: ${cat}`;
+      categoryPill.title = cat;
+
+      questionEl.textContent = getQuestionText(current);
+      answerValueEl.textContent = "";
+
+      // Start timer
+      tTotal = settings.duration;
+      tLeft = tTotal;
+
+      countdownEl.textContent = String(tLeft);
+      setProgress(tLeft, tTotal);
+      revealBtn.disabled = false;
+
+      // audio actions
+      speak(getQuestionText(current));
+      await updateBgmPlayback();
+      stopTunes();
+      await playTune();
+
+      stopTimer();
+      timer = setInterval(() => {
+        tLeft -= 1;
+
+        // last 3 seconds tick
+        if (tLeft <= 3 && tLeft > 0) tick();
+
+        if (tLeft > 0){
+          countdownEl.textContent = String(tLeft);
+          setProgress(tLeft, tTotal);
+        } else {
+          stopTimer();
+          countdownEl.textContent = "0";
+          setProgress(0, tTotal);
+          buzz();
+          revealAnswer();
+        }
+      }, 1000);
+    }
+
+    // ===== Categories modal
+    let allCategories = [];
+
+    function buildCategoriesFromData(){
+      const set = new Set();
+      allQuestions.forEach(q => set.add(getCategory(q)));
+      allCategories = [...set].sort((a,b) => a.localeCompare(b, "nl"));
+    }
+
+    function renderCategoryList(){
+      catList.innerHTML = "";
+      const sel = settings.categories;
+      const effectiveSel = sel ? new Set([...sel].filter(c => allCategories.includes(c))) : null;
+
+      allCategories.forEach(cat => {
+        const row = document.createElement("div");
+        row.className = "catItem";
+
+        const nm = document.createElement("div");
+        nm.className = "nm";
+        nm.textContent = cat;
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.checked = effectiveSel ? effectiveSel.has(cat) : true;
+
+        cb.addEventListener("change", () => {
+          if (!settings.categories) settings.categories = new Set(allCategories);
+          if (cb.checked) settings.categories.add(cat);
+          else settings.categories.delete(cat);
+
+          saveSettings();
+          rebuildPool();
+          catStatus.textContent = settings.categories ? `${settings.categories.size}/${allCategories.length} geselecteerd` : `Alle categorieën geselecteerd (${allCategories.length})`;
+        });
+
+        row.appendChild(nm);
+        row.appendChild(cb);
+        catList.appendChild(row);
+      });
+
+      catStatus.textContent = settings.categories
+        ? `${settings.categories.size}/${allCategories.length} geselecteerd`
+        : `Alle categorieën geselecteerd (${allCategories.length})`;
+    }
+
+    function openCategories(){
+      renderCategoryList();
+      catModal.classList.add("open");
+      catModal.setAttribute("aria-hidden", "false");
+    }
+    function closeCategories(){
+      catModal.classList.remove("open");
+      catModal.setAttribute("aria-hidden", "true");
+    }
+    function selectAllCategories(){
+      settings.categories = null;
+      saveSettings();
+      rebuildPool();
+      renderCategoryList();
+    }
+    function deselectAllCategories(){
+      settings.categories = new Set();
+      saveSettings();
+      rebuildPool();
+      renderCategoryList();
+    }
+
+    // ===== Pool rebuild
+    function rebuildPool(){
+      const wantDiff = normalizeDifficulty(settings.difficulty);
+      const catSet = settings.categories;
+
+      const filtered = allQuestions.filter(q => {
+        const qt = getQuestionText(q);
+        if (!qt) return false;
+
+        const qdiff = normalizeDifficulty(q.Moeilijkheid ?? q.moeilijkheid ?? q.Difficulty ?? q.difficulty);
+        if (wantDiff && qdiff && qdiff !== wantDiff) return false;
+        if (wantDiff && !qdiff) { if (wantDiff !== "medium") return false; }
+
+        if (catSet && !catSet.has(getCategory(q))) return false;
+        return true;
+      });
+
+      // shuffle
+      for (let i = filtered.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+      }
+
+      pool = filtered;
+      usedIdx = 0;
+
+      statusEl.textContent = pool.length > 0
+        ? `Klaar • ${pool.length} vragen (lastigheid: ${settings.difficulty})`
+        : `Geen vragen voor huidige filters (lastigheid/categorieën).`;
+
+      askBtn.disabled = pool.length === 0;
+      revealBtn.disabled = true;
+    }
+
+    // ===== Data loading
+    async function fetchJSON(url){
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Fetch faalde (${res.status}): ${url}`);
+      return await res.json();
+    }
+
+    async function loadQuestions(){
+      const results = await Promise.allSettled(DB_FILES.map(f => fetchJSON(f)));
+      const loaded = [];
+      const loadedFiles = [];
+
+      results.forEach((r, i) => {
+        if (r.status === "fulfilled") {
+          const data = r.value;
+          const arr = Array.isArray(data) ? data : (Array.isArray(data.vragen) ? data.vragen : []);
+          loaded.push(...arr);
+          loadedFiles.push(DB_FILES[i]);
+        }
+      });
+
+      if (loadedFiles.length === 0){
+        // fallback test question
+        loaded.push({
+          Vraag: "Is dit een test vraag?",
+          Verwacht: "Ja dit is een testvraag.",
+          Categorie: "Test",
+          Moeilijkheid: "medium"
+        });
+        loadInfoEl.textContent = "Testmodus • 1 vraag";
+      } else {
+        loadInfoEl.textContent = `${loadedFiles.join(" + ")} • ${loaded.length} vragen`;
+      }
+
+      allQuestions = loaded;
+
+      buildCategoriesFromData();
+      rebuildPool();
+    }
+
+    // ===== Event wiring
+    toSettingsBtn.addEventListener("click", () => {
+      showPage("settings");
+      updateSettingsUI();
+      settingsStatus.textContent = "";
+    });
+
+    backBtn.addEventListener("click", () => showPage("main"));
+
+    askBtn.addEventListener("click", async () => {
+      await unlockAudioOnce();
+      warmupSpeech();
+      await updateBgmPlayback();
+      await startQuestion();
+    });
+
+    revealBtn.addEventListener("click", () => revealAnswer());
+
+    toggleBgm.addEventListener("click", async () => {
+      settings.bgm = !settings.bgm;
+      setToggle(toggleBgm, settings.bgm);
+      saveSettings();
+      await unlockAudioOnce();
+      await updateBgmPlayback();
+    });
+
+    toggleTts.addEventListener("click", () => {
+      settings.tts = !settings.tts;
+      setToggle(toggleTts, settings.tts);
+      saveSettings();
+    });
+
+    toggleSfx.addEventListener("click", () => {
+      settings.sfx = !settings.sfx;
+      setToggle(toggleSfx, settings.sfx);
+      saveSettings();
+      if (!settings.sfx) stopTunes();
+    });
+
+    selDuration.addEventListener("change", () => {
+      settings.duration = parseInt(selDuration.value, 10);
+      saveSettings();
+      resetQA();
+    });
+
+    selDifficulty.addEventListener("change", () => {
+      settings.difficulty = selDifficulty.value;
+      saveSettings();
+      rebuildPool();
+      resetQA();
+    });
+
+    btnCategories.addEventListener("click", () => openCategories());
+    catClose.addEventListener("click", () => closeCategories());
+    catModal.addEventListener("click", (e) => { if (e.target === catModal) closeCategories(); });
+
+    catAll.addEventListener("click", () => selectAllCategories());
+    catNone.addEventListener("click", () => deselectAllCategories());
+
+    // ===== Boot
+    async function boot(){
+      // Intro: 3s then fade out
+      setTimeout(() => introEl.classList.add("fade"), 3000);
+      setTimeout(() => { introEl.style.display = "none"; }, 3800);
+
+      loadSettings();
+      updateSettingsUI();
+
+      // voices may load later
+      if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = () => {};
+
+      await loadQuestions();
+    }
+
+    boot();
+  </script>
 </body>
 </html>
