@@ -40,7 +40,7 @@
     }
 
     /* MOBILE: use background images instead of card PNG */
-    @media (max-width: 700px){
+    @media (max-width: 700px) and (orientation:portrait){
       html, body{
         background-image: var(--bgPortrait);
         background-size: contain;            /* show full image (no zoom) */
@@ -52,19 +52,15 @@
     @media (max-width: 700px) and (orientation:landscape){
       html, body{
         background-image: var(--bgLandscape);
-        background-size: contain;            /* ensure entire landscape bg visible */
+        background-size: 100% auto;         /* fill full width on landscape */
         background-position: center;
         background-repeat: no-repeat;
         background-color: var(--bg);
       }
     }
+}
 
-    /* Desktop scale: make UI ~50% larger on wide screens */
-    #scaleWrap{ transform-origin: top center; }
-    @media (min-width: 900px){
-      #scaleWrap{
-        transform: scale(1.5);
-      }
+        @media (min-width: 900px){
       body{
         padding-bottom: 120px;
       }
@@ -476,6 +472,32 @@
       margin-bottom:8px;
     }
     .catItem .nm{font-weight:900; font-size:14px; color:var(--text);}
+  
+    /* Desktop/laptop: scale UI ~50% via sizes (no transform cropping) */
+    @media (min-width: 900px) and (pointer: fine){
+      .page{ max-width: 780px; padding: 22px 22px 26px; gap: 16px; }
+      .brand .title{ font-size: 26px; }
+      .brand .subtle{ font-size: 16px; }
+      .iconbtn{ width: 60px; height: 60px; font-size: 26px; border-radius: 18px; }
+      .pillMeta{ font-size: 16px; padding: 9px 14px; }
+      .label{ font-size: 16px; }
+      .qText{ font-size: 33px; max-height: 7.5em; }
+      .aText{ font-size: 36px; max-height: 6.2em; }
+      #countdown{ font-size: 84px; width: 160px; }
+      .bar{ height: 20px; }
+      .btn{ font-size: 24px; padding: 20px 18px; border-radius: 18px; }
+      .footerStatus{ font-size: 16px; padding: 12px 14px; }
+      .setting .name{ font-size: 18px; }
+      .setting .desc{ font-size: 15px; }
+      select, button.small{ font-size: 18px; padding: 12px 14px; }
+      .toggle{ width: 70px; height: 40px; }
+      .toggle::after{ width: 30px; height: 30px; }
+      .toggle.on::after{ left: 36px; }
+      /* Buttons under timer (not sticky-bottom) on desktop */
+      .stickyActions{ position: relative; bottom: auto; margin-top: 0; padding-top: 0; }
+      .mainStack{ gap: 18px; }
+    }
+
   </style>
 </head>
 
@@ -484,7 +506,7 @@
     <img src="assets/intro.jpg" alt="Estimania intro" />
   </div>
 
-  <div id="scaleWrap">
+  
     <div id="page-main" class="page active">
       <div class="topbar">
         <div class="brand">
@@ -570,6 +592,7 @@
             <option value="15">15s</option>
             <option value="30" selected>30s</option>
             <option value="45">45s</option>
+            <option value="60">60s</option>
           </select>
         </div>
 
@@ -619,6 +642,7 @@
   <audio id="tune15" src="assets/15s.mp3" preload="auto"></audio>
   <audio id="tune30" src="assets/30s.mp3" preload="auto"></audio>
   <audio id="tune45" src="assets/45s.mp3" preload="auto"></audio>
+  <audio id="tune60" src="assets/60s.mp3" preload="auto"></audio>
 
   <script>
     const DB_FILES = ["VragenDatabase.json", "ActueleVragen.json"];
@@ -672,6 +696,7 @@
     const tune15 = document.getElementById("tune15");
     const tune30 = document.getElementById("tune30");
     const tune45 = document.getElementById("tune45");
+    const tune60 = document.getElementById("tune60");
 
     let allQuestions = [];
     let pool = [];
@@ -745,7 +770,7 @@
       selDifficulty.value = String(settings.difficulty);
 
       bgm.volume = 0.2;
-      try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; } catch {}
+      try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; tune60.volume = 0.6; } catch {}
       if (!settings.bgm) { try { bgm.pause(); } catch {} }
     }
 
@@ -842,7 +867,7 @@
     // ===== Tunes
     function stopTunes(){
       try{
-        [tune15, tune30, tune45].forEach(a => {
+        [tune15, tune30, tune45, tune60].forEach(a => {
           if (!a) return;
           a.pause();
           a.currentTime = 0;
@@ -852,6 +877,7 @@
     function getTune(){
       if (settings.duration === 15) return tune15;
       if (settings.duration === 45) return tune45;
+      if (settings.duration === 60) return tune60;
       return tune30;
     }
     async function playTune(){
@@ -879,14 +905,14 @@
 
       // unlock tunes
       try {
-        [tune15, tune30, tune45].forEach(a => { if (a) a.volume = 0; });
-        for (const a of [tune15, tune30, tune45]) {
+        [tune15, tune30, tune45, tune60].forEach(a => { if (a) a.volume = 0; });
+        for (const a of [tune15, tune30, tune45, tune60]) {
           if (!a) continue;
           const p = a.play();
           if (p && p.catch) await p.catch(() => {});
           a.pause(); a.currentTime = 0;
         }
-        [tune15, tune30, tune45].forEach(a => { if (a) a.volume = 0.6; });
+        [tune15, tune30, tune45, tune60].forEach(a => { if (a) a.volume = 0.6; });
       } catch {}
 
       // unlock WebAudio ALWAYS
