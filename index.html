@@ -39,25 +39,26 @@
       overflow-x:hidden;
     }
 
-    /* MOBILE: use background images instead of card PNG */
-    @media (max-width: 700px) and (orientation:portrait){
+    /* Mobile/touch devices: use background images */
+    @media (pointer: coarse) and (orientation:portrait){
       html, body{
         background-image: var(--bgPortrait);
-        background-size: contain;            /* show full image (no zoom) */
+        background-size: contain;            /* show full image edges */
         background-position: center;
         background-repeat: no-repeat;
         background-color: var(--bg);
       }
     }
-    @media (max-width: 700px) and (orientation:landscape){
+    @media (pointer: coarse) and (orientation:landscape){
       html, body{
         background-image: var(--bgLandscape);
-        background-size: 100% auto;         /* fill full width on landscape */
+        background-size: cover;              /* spread over full screen */
         background-position: center;
         background-repeat: no-repeat;
         background-color: var(--bg);
       }
     }
+}
 }
 
     /* Desktop scale: make UI ~50% larger on wide screens */
@@ -65,6 +66,8 @@
     @media (min-width: 900px){
       #scaleWrap{
         transform: scale(1.5);
+        width: calc(100% / 1.5);
+        margin: 0 auto;
       }
       body{
         padding-bottom: 120px;
