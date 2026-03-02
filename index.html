@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Estimania</title>
 
+  <!-- App icon / favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#244E8F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+
   <style>
     :root{
       --primary:#244E8F;
@@ -37,6 +47,37 @@
       color:var(--text);
       -webkit-font-smoothing: antialiased;
       overflow-x:hidden;
+
+    /* Mobile/touch devices: full-width mobile layout + background images */
+    @media (pointer: coarse){
+      .page{
+        max-width:none;
+        width:100%;
+        margin:0;
+        padding:14px 14px 18px;
+      }
+      .stickyActions{ position: sticky; bottom:10px; margin-top:auto; }
+    }
+
+    @media (pointer: coarse) and (orientation:portrait){
+      html, body{
+        background-image: var(--bgPortrait);
+        background-size: cover;              /* remove white borders */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: var(--bg);
+      }
+    }
+    @media (pointer: coarse) and (orientation:landscape){
+      html, body{
+        background-image: var(--bgLandscape);
+        background-size: cover;              /* remove white borders, fill screen */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: var(--bg);
+      }
+    }
+
     }
 
     /* MOBILE: use background images instead of card PNG */
@@ -496,6 +537,22 @@
       /* Buttons under timer (not sticky-bottom) on desktop */
       .stickyActions{ position: relative; bottom: auto; margin-top: 0; padding-top: 0; }
       .mainStack{ gap: 18px; }
+    }
+
+  
+    /* Desktop: make card area larger (buttons already large) */
+    @media (min-width: 900px) and (pointer: fine){
+      .page{ max-width: 980px; }
+      .cardWrap{
+        max-width: 860px;
+        height: min(70vh, 760px);
+      }
+      .ribbon{
+        width: min(70%, 520px);
+      }
+      .cardBG{
+        filter: drop-shadow(0 18px 50px rgba(36,78,143,.18));
+      }
     }
 
   </style>
