@@ -41,15 +41,22 @@
 
     /* MOBILE: use background images instead of card PNG */
     @media (max-width: 700px){
-      body{
+      html, body{
         background-image: var(--bgPortrait);
-        background-size: cover;
+        background-size: contain;            /* show full image (no zoom) */
         background-position: center;
         background-repeat: no-repeat;
+        background-color: var(--bg);
       }
     }
     @media (max-width: 700px) and (orientation:landscape){
-      body{ background-image: var(--bgLandscape); }
+      html, body{
+        background-image: var(--bgLandscape);
+        background-size: contain;            /* ensure entire landscape bg visible */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: var(--bg);
+      }
     }
 
     /* Desktop scale: make UI ~50% larger on wide screens */
@@ -300,6 +307,19 @@
       gap:10px;
       margin-top:auto;
       padding-top:6px;
+    }
+
+    /* Desktop: actions directly under timer (not stuck to bottom) */
+    @media (min-width: 900px){
+      .stickyActions{
+        position:relative;
+        bottom:auto;
+        margin-top:0;
+        padding-top:0;
+      }
+      .page{
+        min-height:auto;
+      }
     }
     .btn{
       flex:1;
@@ -1125,7 +1145,7 @@
       await startQuestion();
     });
 
-    revealBtn.addEventListener("click", () => revealAnswer());
+    revealBtn.addEventListener("click", () => { tick(); revealAnswer(); });
 
     toggleBgm.addEventListener("click", async () => {
       settings.bgm = !settings.bgm;
