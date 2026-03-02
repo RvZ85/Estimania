@@ -81,7 +81,7 @@
     }
 
     /* MOBILE: use background images instead of card PNG */
-    @media (max-width: 700px) and (orientation:portrait){
+    @media (pointer: coarse) and (orientation:portrait){
       html, body{
         background-image: var(--bgPortrait);
         background-size: contain;            /* show full image (no zoom) */
@@ -90,7 +90,7 @@
         background-color: var(--bg);
       }
     }
-    @media (max-width: 700px) and (orientation:landscape){
+    @media (pointer: coarse) and (orientation:landsc	ape){
       html, body{
         background-image: var(--bgLandscape);
         background-size: 100% auto;         /* fill full width on landscape */
