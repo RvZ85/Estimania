@@ -1,20 +1,92 @@
 [
   {
-    "id": "Q0001",
-    "categorie": "#RvZ",
-    "vraag": "Hoe lang ben ik?",
-    "exact": 42195.0,
-    "unit": "duizend meter",
-    "verwacht": 42.2,
-    "Moeilijkheid": 3
+    "id": "Q0003",
+    "categorie": "Tennis",
+    "vraag": "Hoe lang is een tennisbaan volgens de officiële ITF-regels, in centimeter?",
+    "exact": 2377,
+    "unit": "duizend cm",
+    "verwacht": 2.4,
+    "Moeilijkheid": 1
   },
   {
-    "id": "Q0002",
-    "categorie": "#RvZ",
-    "vraag": "Hoe zwaar ben ik?",
-    "exact": 21097.5,
-    "unit": "duizend meter",
-    "verwacht": 21.1,
+    "id": "Q0004",
+    "categorie": "Tennis",
+    "vraag": "Hoe breed is een dubbelspel-tennisbaan volgens de officiële ITF-regels, in centimeter?",
+    "exact": 1097,
+    "unit": "duizend cm",
+    "verwacht": 1.1,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0005",
+    "categorie": "Tennis",
+    "vraag": "Hoe hoog is het net bij de netpalen volgens de officiële ITF-regels, in centimeter?",
+    "exact": 107,
+    "unit": "cm",
+    "verwacht": 107,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0006",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel seconden heeft een speler maximaal tussen twee punten volgens de officiële ITF-regels?",
+    "exact": 25,
+    "unit": "seconden",
+    "verwacht": 25,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0007",
+    "categorie": "Tennis",
+    "vraag": "Wat is het minimale officiële gewicht van een tennisbal volgens de ITF-specificaties, in gram?",
+    "exact": 56,
+    "unit": "gram",
+    "verwacht": 56,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0008",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel ATP-rankingpunten krijgt de winnaar van een Grand Slam-toernooi in het enkelspel?",
+    "exact": 2000,
+    "unit": "duizend punten",
+    "verwacht": 2,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0009",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel pond sterling ontving de winnaar van het enkelspel op Wimbledon 2025?",
+    "exact": 3000000,
+    "unit": "miljoen pond",
+    "verwacht": 3,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0010",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel minuten duurde de langste tenniswedstrijd ooit, de partij Isner-Mahut op Wimbledon 2010?",
+    "exact": 665,
+    "unit": "minuten",
+    "verwacht": 665,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0011",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel games werden er in totaal gespeeld in de partij Isner-Mahut op Wimbledon 2010?",
+    "exact": 183,
+    "unit": "games",
+    "verwacht": 183,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0012",
+    "categorie": "Tennis",
+    "vraag": "Hoeveel minuten duurde alleen de beslissende vijfde set van Isner-Mahut op Wimbledon 2010?",
+    "exact": 491,
+    "unit": "minuten",
+    "verwacht": 491,
     "Moeilijkheid": 3
   }
 ]
