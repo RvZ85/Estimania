@@ -433,6 +433,36 @@
       color: var(--primary);
       cursor:pointer;
     }
+    .difficultyGroup{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      min-width:150px;
+      flex:0 0 auto;
+    }
+    .diffOption{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border:1px solid rgba(36,78,143,.16);
+      border-radius:12px;
+      background: rgba(255,255,255,.82);
+      color:var(--primary);
+      font-weight:900;
+      line-height:1.1;
+      cursor:pointer;
+      user-select:none;
+    }
+    .diffOption input{
+      margin:0;
+      width:18px;
+      height:18px;
+      accent-color: var(--primary);
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .diffOption span{display:inline-block;}
 
     /* Category modal */
     #catModal{
@@ -681,13 +711,13 @@
         <div class="setting">
           <div class="left">
             <div class="name">Lastigheid</div>
-            <div class="desc">Filtert vragen op Moeilijkheid (makkelijk/medium/lastig).</div>
+            <div class="desc">Selecteer één of meerdere moeilijkheidsgraden. Standaard staat alles aan.</div>
           </div>
-          <select id="sel-difficulty" aria-label="Lastigheid">
-            <option value="makkelijk">makkelijk</option>
-            <option value="medium" selected>medium</option>
-            <option value="lastig">lastig</option>
-          </select>
+          <div id="difficultyGroup" class="difficultyGroup" aria-label="Lastigheid">
+            <label class="diffOption"><input type="checkbox" id="diff-makkelijk" checked> <span>makkelijk</span></label>
+            <label class="diffOption"><input type="checkbox" id="diff-medium" checked> <span>medium</span></label>
+            <label class="diffOption"><input type="checkbox" id="diff-lastig" checked> <span>lastig</span></label>
+          </div>
         </div>
 
         <div class="setting">
@@ -733,7 +763,7 @@
       bgm: "estimania_bgm_v8",
       tts: "estimania_tts_v8",
       duration: "estimania_duration_v8",
-      difficulty: "estimania_difficulty_v8",
+      difficulties: "estimania_difficulties_v9",
       categories: "estimania_categories_v8",
       sfx: "estimania_sfx_v8"
     };
@@ -763,7 +793,9 @@
     const toggleTts = document.getElementById("toggle-tts");
     const toggleSfx = document.getElementById("toggle-sfx");
     const selDuration = document.getElementById("sel-duration");
-    const selDifficulty = document.getElementById("sel-difficulty");
+    const diffMakkelijk = document.getElementById("diff-makkelijk");
+    const diffMedium = document.getElementById("diff-medium");
+    const diffLastig = document.getElementById("diff-lastig");
     const btnCategories = document.getElementById("btn-categories");
     const settingsStatus = document.getElementById("settingsStatus");
 
@@ -797,7 +829,7 @@
       tts: true,
       sfx: true,
       duration: 30,
-      difficulty: "medium",
+      difficulties: ["makkelijk", "medium", "lastig"],
       categories: null
     };
 
@@ -816,7 +848,7 @@
       localStorage.setItem(KEY.tts, settings.tts ? "1" : "0");
       localStorage.setItem(KEY.sfx, settings.sfx ? "1" : "0");
       localStorage.setItem(KEY.duration, String(settings.duration));
-      localStorage.setItem(KEY.difficulty, String(settings.difficulty));
+      localStorage.setItem(KEY.difficulties, JSON.stringify(settings.difficulties));
       localStorage.setItem(KEY.categories, settings.categories ? JSON.stringify([...settings.categories]) : "");
       settingsStatus.textContent = "Opgeslagen.";
       setTimeout(() => { if (settingsStatus.textContent === "Opgeslagen.") settingsStatus.textContent = ""; }, 900);
@@ -827,14 +859,30 @@
       const ttsV = localStorage.getItem(KEY.tts);
       const sfxV = localStorage.getItem(KEY.sfx);
       const durV = localStorage.getItem(KEY.duration);
-      const difV = localStorage.getItem(KEY.difficulty);
+      const difV = localStorage.getItem(KEY.difficulties);
       const catV = localStorage.getItem(KEY.categories);
 
       settings.bgm = bgmV === "1";
       settings.tts = (ttsV === null) ? true : (ttsV === "1");
       settings.sfx = (sfxV === null) ? true : (sfxV === "1");
       settings.duration = durV ? parseInt(durV, 10) : 30;
-      settings.difficulty = difV || "medium";
+      if (difV && difV.trim().length > 0){
+        try {
+          const parsed = JSON.parse(difV);
+          settings.difficulties = Array.isArray(parsed) && parsed.length
+            ? parsed.map(normalizeDifficulty).filter(Boolean)
+            : ["makkelijk", "medium", "lastig"];
+        } catch {
+          settings.difficulties = ["makkelijk", "medium", "lastig"];
+        }
+      } else {
+        settings.difficulties = ["makkelijk", "medium", "lastig"];
+      }
+
+      if ((!difV || difV.trim().length === 0)) {
+        const oldDifV = localStorage.getItem("estimania_difficulty_v8");
+        if (oldDifV) settings.difficulties = [normalizeDifficulty(oldDifV) || "medium"];
+      }
 
       if (catV && catV.trim().length > 0){
         try { settings.categories = new Set(JSON.parse(catV)); }
@@ -849,7 +897,9 @@
       setToggle(toggleTts, settings.tts);
       setToggle(toggleSfx, settings.sfx);
       selDuration.value = String(settings.duration);
-      selDifficulty.value = String(settings.difficulty);
+      diffMakkelijk.checked = settings.difficulties.includes("makkelijk");
+      diffMedium.checked = settings.difficulties.includes("medium");
+      diffLastig.checked = settings.difficulties.includes("lastig");
 
       bgm.volume = 0.2;
       try { tune15.volume = 0.6; tune30.volume = 0.6; tune45.volume = 0.6; tune60.volume = 0.6; } catch {}
@@ -1169,16 +1219,16 @@
     }
 
     function rebuildPool(){
-      const wantDiff = normalizeDifficulty(settings.difficulty);
+      const wantDiffs = new Set((settings.difficulties || []).map(normalizeDifficulty).filter(Boolean));
       const catSet = settings.categories;
 
       const filtered = allQuestions.filter(q => {
         const qt = getQuestionText(q);
         if (!qt) return false;
+        if (wantDiffs.size === 0) return false;
 
-        const qdiff = normalizeDifficulty(q.Moeilijkheid ?? q.moeilijkheid ?? q.Difficulty ?? q.difficulty);
-        if (wantDiff && qdiff && qdiff !== wantDiff) return false;
-        if (wantDiff && !qdiff) { if (wantDiff !== "medium") return false; }
+        const qdiff = normalizeDifficulty(q.Moeilijkheid ?? q.moeilijkheid ?? q.Difficulty ?? q.difficulty) || "medium";
+        if (!wantDiffs.has(qdiff)) return false;
 
         if (catSet && !catSet.has(getCategory(q))) return false;
         return true;
@@ -1192,12 +1242,25 @@
       pool = filtered;
       usedIdx = 0;
 
+      const diffLabel = wantDiffs.size ? [...wantDiffs].join(", ") : "geen";
       statusEl.textContent = pool.length > 0
-        ? `Klaar • ${pool.length} vragen (lastigheid: ${settings.difficulty})`
+        ? `Klaar • ${pool.length} vragen (lastigheid: ${diffLabel})`
         : `Geen vragen voor huidige filters (lastigheid/categorieën).`;
 
       askBtn.disabled = pool.length === 0;
       revealBtn.disabled = true;
+    }
+
+    function updateSelectedDifficulties(){
+      const selected = [];
+      if (diffMakkelijk.checked) selected.push("makkelijk");
+      if (diffMedium.checked) selected.push("medium");
+      if (diffLastig.checked) selected.push("lastig");
+
+      settings.difficulties = selected;
+      saveSettings();
+      rebuildPool();
+      resetQA();
     }
 
     async function fetchJSON(url){
@@ -1282,12 +1345,9 @@
       resetQA();
     });
 
-    selDifficulty.addEventListener("change", () => {
-      settings.difficulty = selDifficulty.value;
-      saveSettings();
-      rebuildPool();
-      resetQA();
-    });
+    diffMakkelijk.addEventListener("change", updateSelectedDifficulties);
+    diffMedium.addEventListener("change", updateSelectedDifficulties);
+    diffLastig.addEventListener("change", updateSelectedDifficulties);
 
     btnCategories.addEventListener("click", () => openCategories());
     catClose.addEventListener("click", () => closeCategories());
