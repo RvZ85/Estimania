@@ -1,92 +1,722 @@
 [
   {
+    "id": "Q0001",
+    "categorie": "Geschiedenis",
+    "vraag": "In welk jaar vond de eerste Aalsmeerse Pramenrace plaats?",
+    "exact": 1986,
+    "unit": "jaartal",
+    "verwacht": 1986,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0002",
+    "categorie": "Geschiedenis",
+    "vraag": "In welk jaar valt de jubileumeditie van de Aalsmeerse Pramenrace volgens de site?",
+    "exact": 2026,
+    "unit": "jaartal",
+    "verwacht": 2026,
+    "Moeilijkheid": 1
+  },
+  {
     "id": "Q0003",
-    "categorie": "Tennis",
-    "vraag": "Hoe lang is een tennisbaan volgens de officiële ITF-regels, in centimeter?",
-    "exact": 2377,
-    "unit": "duizend cm",
-    "verwacht": 2.4,
+    "categorie": "Natuur",
+    "vraag": "Hoeveel openbare eilanden noemt Visit Aalsmeer op de Westeinderplassen?",
+    "exact": 4,
+    "unit": "eilanden",
+    "verwacht": 4,
     "Moeilijkheid": 1
   },
   {
     "id": "Q0004",
-    "categorie": "Tennis",
-    "vraag": "Hoe breed is een dubbelspel-tennisbaan volgens de officiële ITF-regels, in centimeter?",
-    "exact": 1097,
-    "unit": "duizend cm",
-    "verwacht": 1.1,
-    "Moeilijkheid": 1
+    "categorie": "Natuur",
+    "vraag": "Hoeveel eilanden liggen er ongeveer op de Westeinderplassen?",
+    "exact": 400,
+    "unit": "eilanden",
+    "verwacht": 400,
+    "Moeilijkheid": 2
   },
   {
     "id": "Q0005",
-    "categorie": "Tennis",
-    "vraag": "Hoe hoog is het net bij de netpalen volgens de officiële ITF-regels, in centimeter?",
-    "exact": 107,
-    "unit": "cm",
-    "verwacht": 107,
-    "Moeilijkheid": 1
+    "categorie": "Natuur",
+    "vraag": "Hoeveel jachthavens noemt Visit Aalsmeer rond de Westeinderplassen?",
+    "exact": 60,
+    "unit": "jachthavens",
+    "verwacht": 60,
+    "Moeilijkheid": 2
   },
   {
     "id": "Q0006",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel seconden heeft een speler maximaal tussen twee punten volgens de officiële ITF-regels?",
-    "exact": 25,
-    "unit": "seconden",
-    "verwacht": 25,
-    "Moeilijkheid": 1
+    "categorie": "Natuur",
+    "vraag": "Hoe groot is de Bovenlanden kanoroute in Aalsmeer in hectare?",
+    "exact": 38,
+    "unit": "hectare",
+    "verwacht": 38,
+    "Moeilijkheid": 2
   },
   {
     "id": "Q0007",
-    "categorie": "Tennis",
-    "vraag": "Wat is het minimale officiële gewicht van een tennisbal volgens de ITF-specificaties, in gram?",
-    "exact": 56,
-    "unit": "gram",
-    "verwacht": 56,
+    "categorie": "Natuur",
+    "vraag": "Hoeveel hectare van de Bovenlanden kanoroute bestaat uit culturele attracties?",
+    "exact": 9,
+    "unit": "hectare",
+    "verwacht": 9,
     "Moeilijkheid": 2
   },
   {
     "id": "Q0008",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel ATP-rankingpunten krijgt de winnaar van een Grand Slam-toernooi in het enkelspel?",
-    "exact": 2000,
-    "unit": "duizend punten",
-    "verwacht": 2,
-    "Moeilijkheid": 1
+    "categorie": "Natuur",
+    "vraag": "Hoeveel hectare van de Bovenlanden kanoroute bestaat uit natuur en water?",
+    "exact": 29,
+    "unit": "hectare",
+    "verwacht": 29,
+    "Moeilijkheid": 2
   },
   {
     "id": "Q0009",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel pond sterling ontving de winnaar van het enkelspel op Wimbledon 2025?",
-    "exact": 3000000,
-    "unit": "miljoen pond",
-    "verwacht": 3,
+    "categorie": "Demografie",
+    "vraag": "Hoeveel inwoners had Aalsmeer op 1 januari 2025?",
+    "exact": 31991,
+    "unit": "duizend inwoners",
+    "verwacht": 32,
     "Moeilijkheid": 2
   },
   {
     "id": "Q0010",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel minuten duurde de langste tenniswedstrijd ooit, de partij Isner-Mahut op Wimbledon 2010?",
-    "exact": 665,
-    "unit": "minuten",
-    "verwacht": 665,
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van woningen in Aalsmeer in 2025?",
+    "exact": 526000,
+    "unit": "duizend euro",
+    "verwacht": 526,
     "Moeilijkheid": 2
   },
   {
     "id": "Q0011",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel games werden er in totaal gespeeld in de partij Isner-Mahut op Wimbledon 2010?",
-    "exact": 183,
-    "unit": "games",
-    "verwacht": 183,
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van koopwoningen in Aalsmeer in 2025?",
+    "exact": 609000,
+    "unit": "duizend euro",
+    "verwacht": 609,
     "Moeilijkheid": 2
   },
   {
     "id": "Q0012",
-    "categorie": "Tennis",
-    "vraag": "Hoeveel minuten duurde alleen de beslissende vijfde set van Isner-Mahut op Wimbledon 2010?",
-    "exact": 491,
-    "unit": "minuten",
-    "verwacht": 491,
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van corporatiehuurwoningen in Aalsmeer in 2025?",
+    "exact": 357000,
+    "unit": "duizend euro",
+    "verwacht": 357,
     "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0013",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van huurwoningen van overige verhuurders in Aalsmeer in 2025?",
+    "exact": 408000,
+    "unit": "duizend euro",
+    "verwacht": 408,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0014",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van woningen in Aalsmeer in 2024?",
+    "exact": 491000,
+    "unit": "duizend euro",
+    "verwacht": 491,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0015",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van koopwoningen in Aalsmeer in 2024?",
+    "exact": 573000,
+    "unit": "duizend euro",
+    "verwacht": 573,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0016",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van corporatiehuurwoningen in Aalsmeer in 2024?",
+    "exact": 329000,
+    "unit": "duizend euro",
+    "verwacht": 329,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0017",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde van huurwoningen van overige verhuurders in Aalsmeer in 2024?",
+    "exact": 382000,
+    "unit": "duizend euro",
+    "verwacht": 382,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0018",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel procent steeg de gemiddelde WOZ-waarde in Aalsmeer in 2025 ten opzichte van 2024?",
+    "exact": 7.9,
+    "unit": "procent",
+    "verwacht": 7.9,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0019",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde WOZ-waarde per vierkante meter in Aalsmeer in 2025?",
+    "exact": 4197,
+    "unit": "euro per m2",
+    "verwacht": 4197,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0020",
+    "categorie": "Geografie",
+    "vraag": "Hoe groot is Green Park Aalsmeer inclusief de N201 in hectare?",
+    "exact": 189,
+    "unit": "hectare",
+    "verwacht": 189,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0021",
+    "categorie": "Economie",
+    "vraag": "Hoeveel fysieke hubs noemt Royal FloraHolland op zijn locaties-pagina?",
+    "exact": 3,
+    "unit": "hubs",
+    "verwacht": 3,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0022",
+    "categorie": "Economie",
+    "vraag": "Hoeveel euro bedroeg in 2025 het verschil tussen de gemiddelde WOZ-waarde van koopwoningen en corporatiehuurwoningen in Aalsmeer?",
+    "exact": 252000,
+    "unit": "duizend euro",
+    "verwacht": 252,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0023",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel euro steeg de gemiddelde WOZ-waarde van woningen in Aalsmeer van 2024 naar 2025?",
+    "exact": 35000,
+    "unit": "duizend euro",
+    "verwacht": 35,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0024",
+    "categorie": "Economie",
+    "vraag": "Hoeveel euro bedroeg in 2025 het verschil tussen de gemiddelde WOZ-waarde van huurwoningen van overige verhuurders en corporatiehuurwoningen in Aalsmeer?",
+    "exact": 51000,
+    "unit": "duizend euro",
+    "verwacht": 51,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0025",
+    "categorie": "Sport",
+    "vraag": "Wat is het hoogste punt van het skigebied van Les Deux Alpes in meter?",
+    "exact": 3600,
+    "unit": "meter",
+    "verwacht": 3600,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0026",
+    "categorie": "Sport",
+    "vraag": "Hoeveel kilometer piste heeft Les Deux Alpes?",
+    "exact": 220,
+    "unit": "km",
+    "verwacht": 220,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0027",
+    "categorie": "Sport",
+    "vraag": "Hoeveel hectare beslaat het skigebied van Les Deux Alpes?",
+    "exact": 420,
+    "unit": "hectare",
+    "verwacht": 420,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0028",
+    "categorie": "Sport",
+    "vraag": "Welk percentage van het skigebied van Les Deux Alpes ligt boven 2000 meter?",
+    "exact": 75,
+    "unit": "procent",
+    "verwacht": 75,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0029",
+    "categorie": "Sport",
+    "vraag": "Hoeveel meter aaneengesloten hoogteverschil zonder skilift noemt Les Deux Alpes?",
+    "exact": 2300,
+    "unit": "meter",
+    "verwacht": 2300,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0030",
+    "categorie": "Sport",
+    "vraag": "Hoeveel hectare kunstsneeuwdekking heeft Les Deux Alpes?",
+    "exact": 86,
+    "unit": "hectare",
+    "verwacht": 86,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0031",
+    "categorie": "Sport",
+    "vraag": "Hoeveel sneeuwkanonnen heeft Les Deux Alpes?",
+    "exact": 300,
+    "unit": "sneeuwkanonnen",
+    "verwacht": 300,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0032",
+    "categorie": "Sport",
+    "vraag": "Hoeveel 3S-kabelbanen heeft Les Deux Alpes?",
+    "exact": 2,
+    "unit": "kabelbanen",
+    "verwacht": 2,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0033",
+    "categorie": "Sport",
+    "vraag": "Hoeveel stoeltjesliften heeft Les Deux Alpes?",
+    "exact": 16,
+    "unit": "stoeltjesliften",
+    "verwacht": 16,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0034",
+    "categorie": "Sport",
+    "vraag": "Hoeveel gemengde stoeltjesliften heeft Les Deux Alpes?",
+    "exact": 3,
+    "unit": "liften",
+    "verwacht": 3,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0035",
+    "categorie": "Sport",
+    "vraag": "Hoeveel gondelliften heeft Les Deux Alpes?",
+    "exact": 3,
+    "unit": "gondelliften",
+    "verwacht": 3,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0036",
+    "categorie": "Sport",
+    "vraag": "Hoeveel sleepliften heeft Les Deux Alpes?",
+    "exact": 14,
+    "unit": "sleepliften",
+    "verwacht": 14,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0037",
+    "categorie": "Sport",
+    "vraag": "Hoeveel tapijtliften heeft Les Deux Alpes?",
+    "exact": 7,
+    "unit": "tapijtliften",
+    "verwacht": 7,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0038",
+    "categorie": "Sport",
+    "vraag": "Hoeveel gratis tapijtliften heeft Les Deux Alpes onderaan de pistes?",
+    "exact": 3,
+    "unit": "tapijtliften",
+    "verwacht": 3,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0039",
+    "categorie": "Sport",
+    "vraag": "Hoeveel funiculairs heeft Les Deux Alpes?",
+    "exact": 1,
+    "unit": "funiculairs",
+    "verwacht": 1,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0040",
+    "categorie": "Sport",
+    "vraag": "Hoeveel liften van het type elevator noemt Les Deux Alpes in de persinformatie?",
+    "exact": 1,
+    "unit": "liften",
+    "verwacht": 1,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0041",
+    "categorie": "Sport",
+    "vraag": "Hoeveel groene pistes heeft Les Deux Alpes?",
+    "exact": 16,
+    "unit": "pistes",
+    "verwacht": 16,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0042",
+    "categorie": "Sport",
+    "vraag": "Hoeveel blauwe pistes heeft Les Deux Alpes?",
+    "exact": 46,
+    "unit": "pistes",
+    "verwacht": 46,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0043",
+    "categorie": "Sport",
+    "vraag": "Hoeveel rode pistes heeft Les Deux Alpes?",
+    "exact": 16,
+    "unit": "pistes",
+    "verwacht": 16,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0044",
+    "categorie": "Sport",
+    "vraag": "Hoeveel zwarte pistes heeft Les Deux Alpes?",
+    "exact": 10,
+    "unit": "pistes",
+    "verwacht": 10,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0045",
+    "categorie": "Reizen",
+    "vraag": "Hoeveel minuten duurt het vanuit het resort om met de Jandri de toppen te bereiken?",
+    "exact": 17,
+    "unit": "minuten",
+    "verwacht": 17,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0046",
+    "categorie": "Geografie",
+    "vraag": "Op welke hoogte ligt het resort van Les Deux Alpes onderaan de pistes?",
+    "exact": 1650,
+    "unit": "meter",
+    "verwacht": 1650,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0047",
+    "categorie": "Sport",
+    "vraag": "Op welke hoogte liggen de nieuwe beginnerszones van Les Deux Alpes minimaal?",
+    "exact": 2100,
+    "unit": "meter",
+    "verwacht": 2100,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0048",
+    "categorie": "Sport",
+    "vraag": "Op welke hogere hoogte ligt een tweede beginnerszone van Les Deux Alpes?",
+    "exact": 2600,
+    "unit": "meter",
+    "verwacht": 2600,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0049",
+    "categorie": "Infrastructuur",
+    "vraag": "Hoe lang is de Super Venosc-gondellijn in meter?",
+    "exact": 1168,
+    "unit": "meter",
+    "verwacht": 1168,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0050",
+    "categorie": "Infrastructuur",
+    "vraag": "Hoeveel meter hoogteverschil overbrugt de Super Venosc-gondel?",
+    "exact": 405,
+    "unit": "meter",
+    "verwacht": 405,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0051",
+    "categorie": "Demografie",
+    "vraag": "Hoeveel inwoners had Nederland op 1 januari 2025?",
+    "exact": 18000000,
+    "unit": "miljoen inwoners",
+    "verwacht": 18,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0052",
+    "categorie": "Demografie",
+    "vraag": "Hoeveel in het buitenland geboren inwoners had Nederland op 1 januari 2025?",
+    "exact": 3026000,
+    "unit": "miljoen mensen",
+    "verwacht": 3.03,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0053",
+    "categorie": "Demografie",
+    "vraag": "Welk percentage van de Nederlandse bevolking was op 1 januari 2025 in het buitenland geboren?",
+    "exact": 16.8,
+    "unit": "procent",
+    "verwacht": 16.8,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0054",
+    "categorie": "Demografie",
+    "vraag": "Hoeveel inwoners van Nederland hadden op 1 januari 2025 één in het buitenland geboren ouder en één in Nederland geboren ouder?",
+    "exact": 1149000,
+    "unit": "duizend mensen",
+    "verwacht": 1149,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0055",
+    "categorie": "Demografie",
+    "vraag": "Hoeveel inwoners van Nederland hadden op 1 januari 2025 twee in het buitenland geboren ouders?",
+    "exact": 968000,
+    "unit": "duizend mensen",
+    "verwacht": 968,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0056",
+    "categorie": "Demografie",
+    "vraag": "Met hoeveel inwoners groeide de bevolking van Nederland in de eerste helft van 2025?",
+    "exact": 36900,
+    "unit": "duizend inwoners",
+    "verwacht": 36.9,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0057",
+    "categorie": "Demografie",
+    "vraag": "Hoeveel inwoners telde Nederland eind juni 2025?",
+    "exact": 18080000,
+    "unit": "miljoen inwoners",
+    "verwacht": 18.1,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0058",
+    "categorie": "Politiek",
+    "vraag": "Hoeveel asielzoekers en nareizigers kwamen er in totaal naar Nederland in 2025?",
+    "exact": 40570,
+    "unit": "duizend mensen",
+    "verwacht": 40.6,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0059",
+    "categorie": "Politiek",
+    "vraag": "Hoeveel mensen vroegen in 2025 voor de eerste keer asiel aan in Nederland?",
+    "exact": 24100,
+    "unit": "duizend mensen",
+    "verwacht": 24.1,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0060",
+    "categorie": "Politiek",
+    "vraag": "Hoeveel nareizigers kwamen er in 2025 naar Nederland?",
+    "exact": 16500,
+    "unit": "duizend mensen",
+    "verwacht": 16.5,
+    "Moeilijkheid": 3
+  },
+  {
+    "id": "Q0061",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde transactieprijs van een bestaande koopwoning in Nederland in 2024?",
+    "exact": 451000,
+    "unit": "duizend euro",
+    "verwacht": 451,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0062",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel procent steeg de prijs van bestaande koopwoningen in Nederland in 2024?",
+    "exact": 8.7,
+    "unit": "procent",
+    "verwacht": 8.7,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0063",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel procent steeg het aantal verkochte woningen in Nederland in 2024?",
+    "exact": 11.6,
+    "unit": "procent",
+    "verwacht": 11.6,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0064",
+    "categorie": "Economie",
+    "vraag": "Wat was de gemiddelde inflatie in Nederland in 2024?",
+    "exact": 3.3,
+    "unit": "procent",
+    "verwacht": 3.3,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0065",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel procent waren voedingsmiddelen in Nederland in 2024 gemiddeld duurder dan een jaar eerder?",
+    "exact": 1.1,
+    "unit": "procent",
+    "verwacht": 1.1,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0066",
+    "categorie": "Economie",
+    "vraag": "Met hoeveel procent steeg de koopkracht in Nederland in 2024?",
+    "exact": 3.6,
+    "unit": "procent",
+    "verwacht": 3.6,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0067",
+    "categorie": "Economie",
+    "vraag": "Hoeveel procent bedroeg de cao-loonstijging in Nederland in 2024?",
+    "exact": 6.8,
+    "unit": "procent",
+    "verwacht": 6.8,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0068",
+    "categorie": "Economie",
+    "vraag": "Hoe hoog was het wettelijk minimumuurloon voor 21 jaar en ouder per 1 januari 2026?",
+    "exact": 14.71,
+    "unit": "euro per uur",
+    "verwacht": 14.7,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0069",
+    "categorie": "Economie",
+    "vraag": "Hoe hoog was het wettelijk minimumuurloon voor 20-jarigen per 1 januari 2026?",
+    "exact": 11.77,
+    "unit": "euro per uur",
+    "verwacht": 11.8,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0070",
+    "categorie": "Economie",
+    "vraag": "Hoe hoog was het wettelijk minimumuurloon voor 19-jarigen per 1 januari 2026?",
+    "exact": 8.83,
+    "unit": "euro per uur",
+    "verwacht": 8.8,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0071",
+    "categorie": "Economie",
+    "vraag": "Hoe hoog was het wettelijk minimumuurloon voor 18-jarigen per 1 januari 2026?",
+    "exact": 7.36,
+    "unit": "euro per uur",
+    "verwacht": 7.4,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0072",
+    "categorie": "Economie",
+    "vraag": "Hoeveel mensen waren er in het vierde kwartaal van 2025 werkloos in Nederland?",
+    "exact": 410000,
+    "unit": "duizend mensen",
+    "verwacht": 410,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0073",
+    "categorie": "Economie",
+    "vraag": "Hoe hoog was de werkloosheid in Nederland in het vierde kwartaal van 2025?",
+    "exact": 4.0,
+    "unit": "procent",
+    "verwacht": 4,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0074",
+    "categorie": "Economie",
+    "vraag": "Hoeveel lopende WW-uitkeringen registreerde UWV eind oktober 2025?",
+    "exact": 195000,
+    "unit": "duizend uitkeringen",
+    "verwacht": 195,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0075",
+    "categorie": "Sport",
+    "vraag": "Hoeveel gouden medailles won Nederland op de Olympische Spelen van Parijs 2024?",
+    "exact": 15,
+    "unit": "medailles",
+    "verwacht": 15,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0076",
+    "categorie": "Sport",
+    "vraag": "Hoeveel medailles won Nederland in totaal op de Olympische Spelen van Parijs 2024?",
+    "exact": 34,
+    "unit": "medailles",
+    "verwacht": 34,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0077",
+    "categorie": "Sport",
+    "vraag": "Hoeveel medailles won TeamNL in totaal op de Olympische en Paralympische Spelen van 2024 samen?",
+    "exact": 90,
+    "unit": "medailles",
+    "verwacht": 90,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0078",
+    "categorie": "Politiek",
+    "vraag": "Hoe hoog was het opkomstpercentage bij de Tweede Kamerverkiezingen van 22 november 2023?",
+    "exact": 77.7,
+    "unit": "procent",
+    "verwacht": 77.7,
+    "Moeilijkheid": 1
+  },
+  {
+    "id": "Q0079",
+    "categorie": "Politiek",
+    "vraag": "Hoeveel stemmen werden uitgebracht bij de Tweede Kamerverkiezingen van 22 november 2023?",
+    "exact": 10475203,
+    "unit": "miljoen stemmen",
+    "verwacht": 10.5,
+    "Moeilijkheid": 2
+  },
+  {
+    "id": "Q0080",
+    "categorie": "Politiek",
+    "vraag": "Hoeveel zetels behaalde de PVV bij de Tweede Kamerverkiezingen van 2023?",
+    "exact": 37,
+    "unit": "zetels",
+    "verwacht": 37,
+    "Moeilijkheid": 1
   }
 ]
