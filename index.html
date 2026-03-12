@@ -765,7 +765,8 @@
       duration: "estimania_duration_v8",
       difficulties: "estimania_difficulties_v9",
       categories: "estimania_categories_v8",
-      sfx: "estimania_sfx_v8"
+      sfx: "estimania_sfx_v8",
+      played: "estimania_played_v1"
     };
 
     const introEl = document.getElementById("intro");
@@ -815,6 +816,7 @@
     let allQuestions = [];
     let pool = [];
     let usedIdx = 0;
+    let playedIds = new Set();
 
     let current = null;
     let timer = null;
@@ -837,6 +839,38 @@
       pageMain.classList.toggle("active", which === "main");
       pageSettings.classList.toggle("active", which === "settings");
     }
+
+    function getQuestionId(q){
+      const explicitId = q?.id ?? q?.ID ?? q?.Id ?? "";
+      if (String(explicitId).trim()) return String(explicitId).trim();
+
+      const vraag = String(q?.Vraag ?? q?.vraag ?? q?.question ?? "").trim();
+      const cat = String(q?.Categorie ?? q?.categorie ?? q?.category ?? "Algemeen").trim();
+      const exact = String(q?.Exact ?? q?.exact ?? q?.answer ?? "").trim();
+      const unit = String(q?.Unit ?? q?.unit ?? "").trim();
+      return `${cat}__${vraag}__${exact}__${unit}`;
+    }
+
+    function savePlayed(){
+      try {
+        localStorage.setItem(KEY.played, JSON.stringify([...playedIds]));
+      } catch {}
+    }
+
+    function loadPlayed(){
+      const raw = localStorage.getItem(KEY.played);
+      if (!raw || !raw.trim()){
+        playedIds = new Set();
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        playedIds = new Set(Array.isArray(parsed) ? parsed.map(v => String(v)) : []);
+      } catch {
+        playedIds = new Set();
+      }
+    }
+
 
     function setToggle(el, on){
       el.classList.toggle("on", !!on);
@@ -1090,7 +1124,10 @@
           [pool[i], pool[j]] = [pool[j], pool[i]];
         }
       }
-      return pool[usedIdx++];
+      const q = pool[usedIdx++];
+      playedIds.add(getQuestionId(q));
+      savePlayed();
+      return q;
     }
 
     function revealAnswer(){
@@ -1222,7 +1259,7 @@
       const wantDiffs = new Set((settings.difficulties || []).map(normalizeDifficulty).filter(Boolean));
       const catSet = settings.categories;
 
-      const filtered = allQuestions.filter(q => {
+      const eligible = allQuestions.filter(q => {
         const qt = getQuestionText(q);
         if (!qt) return false;
         if (wantDiffs.size === 0) return false;
@@ -1234,6 +1271,14 @@
         return true;
       });
 
+      let filtered = eligible.filter(q => !playedIds.has(getQuestionId(q)));
+
+      if (filtered.length === 0 && eligible.length > 0){
+        eligible.forEach(q => playedIds.delete(getQuestionId(q)));
+        savePlayed();
+        filtered = [...eligible];
+      }
+
       for (let i = filtered.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * (i + 1));
         [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
@@ -1243,8 +1288,9 @@
       usedIdx = 0;
 
       const diffLabel = wantDiffs.size ? [...wantDiffs].join(", ") : "geen";
+      const seenCount = Math.max(0, eligible.length - pool.length);
       statusEl.textContent = pool.length > 0
-        ? `Klaar • ${pool.length} vragen (lastigheid: ${diffLabel})`
+        ? `Klaar • ${pool.length} vragen over (${seenCount} al gespeeld) • lastigheid: ${diffLabel}`
         : `Geen vragen voor huidige filters (lastigheid/categorieën).`;
 
       askBtn.disabled = pool.length === 0;
@@ -1361,6 +1407,7 @@
       setTimeout(() => { introEl.style.display = "none"; }, 3800);
 
       loadSettings();
+      loadPlayed();
       updateSettingsUI();
 
       if ("speechSynthesis" in window) window.speechSynthesis.onvoiceschanged = () => {};
